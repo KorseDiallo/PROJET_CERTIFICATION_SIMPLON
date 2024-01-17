@@ -107,6 +107,14 @@ public function login(Request $request){
     ]);
 }
 
+public function dashboardAdmin(){
+    $user= auth()->user();
+
+    return response()->json([
+        "message"=>"vous êtes connecter en tant que Administrateur",
+        "data"=>$user
+    ]);
+}
     /**
      * Display the specified resource.
      */
