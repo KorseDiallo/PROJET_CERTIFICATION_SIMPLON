@@ -19,15 +19,15 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::middleware(['auth','admin'])->group(function(){
+Route::middleware(['auth:api','admin'])->group(function(){
     Route::get('/dashboardAdmin',[UsersController::class,"dashboardAdmin"]);
 });
 
-Route::middleware(['auth','donateur'])->group(function(){
+Route::middleware(['auth:api','donateur'])->group(function(){
 
 });
 
-Route::middleware(['auth','fondation'])->group(function(){
+Route::middleware(['auth:api','fondation'])->group(function(){
 
 });
 
