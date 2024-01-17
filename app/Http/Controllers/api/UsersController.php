@@ -123,6 +123,62 @@ public function dashboardAdmin(){
     {
         return $image->store('images', 'public');
     }
+
+    public function approuverDemande(User $user){
+        $user->statut='accepte';
+        if($user->save()){
+            return response()->json([
+                "status" => true,
+                "message" => "Demande approuvée avec succès"
+                
+            ]);   
+        }
+    }
+
+    public function refuserDemande(User $user){
+        $user->statut='refuse';
+        if($user->save()){
+            return response()->json([
+                "status" => true,
+                "message" => "Demande refuser avec succès"
+                
+            ]);   
+        }
+    }
+
+    public function bloquer(User $user){
+        $user->bloque=true;
+        if($user->save()){
+            return response()->json([
+                "status" => true,
+                "message" => "l'utilisateur a été bloqué  avec succès"
+                
+            ]);   
+        }
+    }
+
+    public function debloquer(User $user){
+        $user->bloque=false;
+        if($user->save()){
+            return response()->json([
+                "status" => true,
+                "message" => "l'utilisateur a été debloqué  avec succès"
+                
+            ]);   
+        }
+    }
+
+    public function supprimer(User $user){
+        $user->is_deleted=true;
+        if($user->save()){
+            return response()->json([
+                "status" => true,
+                "message" => "l'utilisateur a été supprimé avec succès"
+                
+            ]);   
+        }
+    }
+
     /**
      * Display the specified resource.
      */

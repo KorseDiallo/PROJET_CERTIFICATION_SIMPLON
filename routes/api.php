@@ -21,6 +21,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:api','admin'])->group(function(){
     Route::get('/dashboardAdmin',[UsersController::class,"dashboardAdmin"]);
+    Route::post('/approuver/{user}',[UsersController::class,"approuverDemande"]);
+    Route::post('/refuserDemande/{user}',[UsersController::class,"refuserDemande"]);
+    Route::post('/bloquer/{user}',[UsersController::class,"bloquer"]);
+    Route::post('/debloquer/{user}',[UsersController::class,"debloquer"]);
+    Route::post('/supprimer/{user}',[UsersController::class,"supprimer"]);
 });
 
 Route::middleware(['auth:api','donateur'])->group(function(){
