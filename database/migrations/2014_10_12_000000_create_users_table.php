@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('nom');
             $table->string('prenom')->nullable();
+            $table->string('image')->nullable(); 
             $table->string('description')->nullable();
             $table->string('adresse')->nullable();
             $table->string('email')->unique();
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->enum('statut', ['enattente', 'accepte', 'refuse']);
             $table->boolean('bloque')->default(false);
+            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
         //DB::table('users')->update(['statut' => DB::raw("CASE WHEN role = 'fondation' THEN 'enattente' ELSE 'accepte' END")]);

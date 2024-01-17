@@ -33,6 +33,7 @@ class UsersController extends Controller
         $request->validate([
             'nom' => 'required|string|max:255',
             'prenom' => 'nullable|string|max:255',
+            'image' => 'nullable |file |mimes:jpeg,jpg,png,gif',
             'description' => 'nullable|string|max:255',
             'adresse' => 'nullable|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -40,11 +41,13 @@ class UsersController extends Controller
             'telephone' => 'required|string|max:20',
             'role' => 'required|in:admin,donateur,fondation',
             'bloque' => 'boolean',
+            'is_deleted' => 'boolean'
         ]);
 
         $user = new User();
         $user->nom = $request->input('nom');
         $user->prenom = $request->input('prenom');
+        $user->image = $this->storeImage($request->image);
         $user->description = $request->input('description');
         $user->adresse = $request->input('adresse');
         $user->email = $request->input('email');
@@ -115,6 +118,11 @@ public function dashboardAdmin(){
         "data"=>$user
     ]);
 }
+
+    private function storeImage($image)
+    {
+        return $image->store('images', 'public');
+    }
     /**
      * Display the specified resource.
      */
