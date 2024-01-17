@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,13 +14,21 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('nom');
+            $table->string('prenom')->nullable();
+            $table->string('description')->nullable();
+            $table->string('adresse')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('telephone');
+            $table->enum('role',['admin','donateur','fondation'])->default('donateur');
             $table->rememberToken();
+            $table->enum('statut', ['enattente', 'accepte', 'refuse']);
+            $table->boolean('bloque')->default(false);
             $table->timestamps();
         });
+        //DB::table('users')->update(['statut' => DB::raw("CASE WHEN role = 'fondation' THEN 'enattente' ELSE 'accepte' END")]);
     }
 
     /**
