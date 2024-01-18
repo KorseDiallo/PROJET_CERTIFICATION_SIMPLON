@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\inscriptionUsersRequest;
+use App\Http\Requests\loginUsersRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
@@ -73,11 +74,8 @@ class UsersController extends Controller
     }
 }
 
-public function login(Request $request){
-    $request->validate([
-        'email'=> 'required |email',
-        'password'=> 'required',
-    ]);
+public function login(loginUsersRequest $request){
+   
 
     $credentials = $request->only('email', 'password');
 
