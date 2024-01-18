@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\inscriptionUsersRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
@@ -28,27 +29,16 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(inscriptionUsersRequest $request)
     {
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'nullable|string|max:255',
-            'image' => 'nullable |file |mimes:jpeg,jpg,png,gif',
-            'description' => 'nullable|string|max:255',
-            'adresse' => 'nullable|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8',
-            'telephone' => 'required|string|max:20',
-            'role' => 'required|in:admin,donateur,fondation',
-            'bloque' => 'boolean',
-            'is_deleted' => 'boolean'
-        ]);
+       
 
         $user = new User();
         $user->nom = $request->input('nom');
         $user->prenom = $request->input('prenom');
         $user->image = $this->storeImage($request->image);
         $user->description = $request->input('description');
+        $user->numeroEnregistrement= $request->input('numeroEnregistrement');
         $user->adresse = $request->input('adresse');
         $user->email = $request->input('email');
         $user->password = bcrypt($request->input('password'));
@@ -61,13 +51,20 @@ class UsersController extends Controller
         } else {
             $user->statut = 'enattente'; 
         }
-        if ($user->save()) {
-            return response()->json([
-                "status" => true,
-                "message" => "Inscription effectuée avec succès",
-                "data" => $user
-            ]);   
-    }else{
+    
+
+    if ($user->save()) {
+        // Filtrer les attributs non vides avant de les renvoyer
+        $userData = collect($user->toArray())->filter(function ($value) {
+            return !is_null($value) && $value !== '';
+        })->all();
+
+        return response()->json([
+            "status" => true,
+            "message" => "Inscription effectuée avec succès",
+            "data" => $userData
+        ]);
+    } else {
         return response()->json([
             "status" => false,
             "message" => "Erreur lors de l'inscription",
@@ -112,10 +109,10 @@ public function login(Request $request){
 
 public function dashboardAdmin(){
     $user= auth()->user();
-
+  
     return response()->json([
         "message"=>"vous êtes connecter en tant que Administrateur",
-        "data"=>$user
+        //"data"=>$user
     ]);
 }
 

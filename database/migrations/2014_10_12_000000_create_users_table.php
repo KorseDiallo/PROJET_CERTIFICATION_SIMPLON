@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('prenom')->nullable();
             $table->string('image')->nullable(); 
             $table->string('description')->nullable();
+            $table->string('numeroEnregistrement')->nullable();
             $table->string('adresse')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
