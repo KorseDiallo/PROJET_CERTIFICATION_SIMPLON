@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\collecteDeFondsController;
 use App\Http\Controllers\api\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +37,8 @@ Route::middleware(['auth:api','donateur'])->group(function(){
 });
 
 Route::middleware(['auth:api','fondation'])->group(function(){
-
+    Route::post('/creerCollecte',[collecteDeFondsController::class,"store"]);
+    Route::get('/logout',[UsersController::class,"logout"]);
 });
 
  Route::post('/register', [UsersController::class,'store']);
