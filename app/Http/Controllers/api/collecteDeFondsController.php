@@ -42,7 +42,7 @@ class collecteDeFondsController extends Controller
         $collecteDeFond->numeroCompte= $request->input('numeroCompte');
         $collecteDeFond->user_id = $fondationId;
 
-        if($collecteDeFond){
+        if($collecteDeFond->save()){
             return response()->json([
                 "status" => true,
                 "message" => "La Collecte de Fonds a été bien crée",

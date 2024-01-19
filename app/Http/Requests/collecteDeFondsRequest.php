@@ -29,8 +29,7 @@ class collecteDeFondsRequest extends FormRequest
             'image' => 'required|file |mimes:jpeg,jpg,png,gif',
             'objectifFinancier' => 'required|numeric',
             'numeroCompte' => 'required|numeric',
-            'statut' => 'required|in:encours,cloturer,decloturer',
-            'user_id' => 'required|exists:users,id',
+          
         ];
     }
 
