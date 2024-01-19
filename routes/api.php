@@ -25,7 +25,10 @@ Route::middleware(['auth:api','admin'])->group(function(){
     Route::post('/refuserDemande/{user}',[UsersController::class,"refuserDemande"]);
     Route::post('/bloquer/{user}',[UsersController::class,"bloquer"]);
     Route::post('/debloquer/{user}',[UsersController::class,"debloquer"]);
-    Route::post('/supprimer/{user}',[UsersController::class,"supprimer"]);
+    Route::delete('/supprimer/{user}',[UsersController::class,"destroy"]);
+    Route::get('/listeDonateur',[UsersController::class,"listeDonateur"]);
+    Route::get('/listeFondation',[UsersController::class,"listeFondation"]);
+    Route::get('/logout',[UsersController::class,"logout"]);
 });
 
 Route::middleware(['auth:api','donateur'])->group(function(){

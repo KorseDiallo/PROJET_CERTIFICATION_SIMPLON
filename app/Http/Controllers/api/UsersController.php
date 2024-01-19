@@ -7,6 +7,7 @@ use App\Http\Requests\inscriptionUsersRequest;
 use App\Http\Requests\loginUsersRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class UsersController extends Controller
@@ -174,6 +175,70 @@ public function dashboardAdmin(){
         }
     }
 
+    public function logout()
+    {
+        Auth::logout();
+        return response()->json([
+            'message' => 'Deconnexion Effectuée avec Succès',
+        ]);
+    }
+
+    public function listeDonateur(){
+        $listeDonateur= User::where('role','donateur')->get();
+
+          // Filtrer les attributs non vides avant de les renvoyer
+          $listeDonateur = $listeDonateur->map(function ($user) {
+            return collect($user->toArray())->filter(function ($value) {
+                return !is_null($value) && $value !== '';
+            })->all();
+        });
+
+        if($listeDonateur->isNotEmpty()){
+            return response()->json([
+                "status" => true,
+                "message" => "Liste de tous les donateurs",
+                "data" => $listeDonateur
+                
+            ]); 
+        }else{
+            return response()->json([
+                "status" => false,
+                "message" => "Vous avez aucun donnateur inscrit pour le moment",
+                "data" => []
+                
+            ]); 
+        }
+    }
+
+    public function listeFondation(){
+        $listeFondation= User::where('role','fondation')->get();
+
+         // Filtrer les attributs non vides avant de les renvoyer
+        $listeFondation = $listeFondation->map(function ($user) {
+            return collect($user->toArray())->filter(function ($value) {
+                return !is_null($value) && $value !== '';
+            })->all();
+        });
+
+       
+
+        if($listeFondation->isNotEmpty()){
+            return response()->json([
+                "status" => true,
+                "message" => "Liste de tous les fondations",
+                "data" => $listeFondation
+                
+            ]); 
+        }else{
+            return response()->json([
+                "status" => false,
+                "message" => "Vous avez aucune donnateur inscrit pour le moment",
+                "data" => []
+                
+            ]); 
+        }
+    }
+
     /**
      * Display the specified resource.
      */
@@ -201,8 +266,14 @@ public function dashboardAdmin(){
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        if($user->delete()){
+             return response()->json([
+                "status" => true,
+                "message" => "l'utilisateur a été supprimé avec succès"
+                
+            ]); 
+        }
     }
 }
