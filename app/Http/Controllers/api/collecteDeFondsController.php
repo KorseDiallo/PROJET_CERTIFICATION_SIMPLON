@@ -130,8 +130,31 @@ class collecteDeFondsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(collecteDeFonds $collecteDeFond)
     {
-        //
+        // personne connectée
+        $fondation = auth()->user();
+        $fondationId= $fondation->id;
+
+        if($fondationId==$collecteDeFond->user_id){
+            if($collecteDeFond->delete()){
+                return response()->json([
+                    "status" => true,
+                    "message" => "La Collecte de Fonds a été bien supprimée",
+                    "data" => $collecteDeFond
+                ]);
+            }else{
+                return response()->json([
+                    "status" => false,
+                    "message" => "Erreur lors de la suppression de la collecte de fonds ",
+                   
+                ]);
+            }
+        }else{
+            return response()->json([
+                "status" => false,
+                "message" => "la collecte de fonds vous appartient pas du coup vous pouvez pas la supprimer",
+            ]);
+        }
     }
 }

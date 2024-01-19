@@ -39,6 +39,7 @@ Route::middleware(['auth:api','donateur'])->group(function(){
 Route::middleware(['auth:api','fondation'])->group(function(){
     Route::post('/creerCollecte',[collecteDeFondsController::class,"store"]);
     Route::put('/modifierCollecte/{collecteDeFond}',[collecteDeFondsController::class,"update"]);
+    Route::delete('/supprimerCollecte/{collecteDeFond}',[collecteDeFondsController::class,"destroy"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });
 
