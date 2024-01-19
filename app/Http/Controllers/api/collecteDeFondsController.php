@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\collecteDeFondsRequest;
 use App\Models\collecteDeFonds;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class collecteDeFondsController extends Controller
@@ -58,6 +59,8 @@ class collecteDeFondsController extends Controller
        
     }
 
+    
+
     private function storeImage($image)
     {
         return $image->store('imagesCollecte', 'public');
@@ -82,9 +85,46 @@ class collecteDeFondsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, collecteDeFonds $collecteDeFond)
     {
-        //
+         // personne connectée
+         $fondation = auth()->user();
+         $fondationId= $fondation->id;
+
+         if($fondationId==$collecteDeFond->user_id){
+            $collecteDeFond->titre=$request->titre;
+            $collecteDeFond->description=$request->description;
+            if($request->hasFile("image")){
+                $collecteDeFond->image=$this->storeImage($request->image);
+            }
+            $collecteDeFond->objectifFinancier=$request->input('objectifFinancier');
+            $collecteDeFond->numeroCompte=$request->input('numeroCompte');
+            $collecteDeFond->user_id = $fondationId;
+
+            if($collecteDeFond->update()){
+                // dd($collecteDeFond);
+                return response()->json([
+                    "status" => true,
+                    "message" => "La Collecte de Fonds a été bien modifiée",
+                    "data" => $collecteDeFond
+                ]);
+            }else{
+                return response()->json([
+                    "status" => false,
+                    "message" => "Erreur lors de la modification de la collecte de fonds ",
+                   
+                ]);
+            }
+
+
+         }else{
+            return response()->json([
+                "status" => false,
+                "message" => "la collecte de fonds vous appartient pas du coup vous pouvez pas le modifier",
+            ]);
+         }
+
+         
     }
 
     /**
