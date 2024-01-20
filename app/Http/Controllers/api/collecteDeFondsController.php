@@ -127,6 +127,45 @@ class collecteDeFondsController extends Controller
          
     }
 
+    public function modifierProfil(Request $request){
+         // personne connectée
+         $fondation = auth()->user();
+         $fondationId= $fondation->id;
+         $profil= User::findOrFail($fondationId);  
+         if($profil->id==$fondationId){
+              $profil->nom= $request->nom;
+              $profil->prenom= $request->prenom;
+              if($request->hasFile("image")){
+                $profil->image=$this->storeImage($request->image);
+            }
+         $profil->description= $request->description;
+         $profil->numeroEnregistrement= $request->numeroEnregistrement;
+         $profil->adresse= $request->adresse;
+         $profil->email= $request->email;
+         $profil->password= bcrypt($request->password);
+         $profil->telephone= $request->telephone;
+         if($profil->role=="fondateur"){
+            $profil->role= "fondateur";
+         }else if($profil->role=="donateur"){
+            $profil->role= "donateur";
+         }
+
+         if($profil->update()){
+            return response()->json([
+                "status" => true,
+                "message" => "Votre profil a été modifié avec succès",
+                "data" => $profil
+            ]);
+         }
+
+         }else{
+            return response()->json([
+                "status" => false,
+                "message" => "Vous n'etes pas propriètaire",
+            ]);
+         }
+    }
+
     /**
      * Remove the specified resource from storage.
      */
