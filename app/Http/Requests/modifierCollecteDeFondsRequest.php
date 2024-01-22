@@ -27,7 +27,7 @@ class modifierCollecteDeFondsRequest extends FormRequest
             
                 'titre' => 'required|string',
                 'description' => 'required|string',
-                'image' => 'required|file |mimes:jpeg,jpg,png,gif',
+                'image' => 'nullable|file|mimes:jpeg,jpg,png,gif',
                 'objectifFinancier' => 'required|numeric',
                 'numeroCompte' => 'required|numeric',
               
@@ -50,7 +50,7 @@ class modifierCollecteDeFondsRequest extends FormRequest
             'titre.string' => 'le titre doit être une chaine de caractère ',
             'description.required' => 'La description est obligatoire',
             'description.string' => 'la description doit être une chaine de caractère ',
-            'image.required' => 'l\'image est obligatoire',
+            // 'image.required' => 'l\'image est obligatoire',
             'image.file' => 'l\'image doit être de type file',
             'image.mimes' => 'l\'image doit respecter ses formats là: jpeg,jpg,png,gif',
             'objectifFinancier.required' => 'L\'objectif est obligatoire',
