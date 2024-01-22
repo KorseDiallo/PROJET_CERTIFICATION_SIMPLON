@@ -164,16 +164,7 @@ public function dashboardAdmin(){
         }
     }
 
-    public function supprimer(User $user){
-        $user->is_deleted=true;
-        if($user->save()){
-            return response()->json([
-                "status" => true,
-                "message" => "l'utilisateur a été supprimé avec succès"
-                
-            ]);   
-        }
-    }
+   
 
     public function logout()
     {
@@ -238,6 +229,28 @@ public function dashboardAdmin(){
             ]); 
         }
     }
+
+    public function supprimerCompte(){
+       
+        $userressource=User::where('id',Auth::user()->id)->first();
+
+        $userressource->is_deleted=true;
+
+         if($userressource->update()){
+            return response()->json([
+                "status" => true,
+                "message" => "Votre Compte a été supprimé avec succès"
+                
+            ]);   
+         }else{
+            return response()->json([
+                "status" => false,
+                "message" => "Vous n'etes pas proritaire du compte"
+                
+            ]);   
+         }
+    }
+
 
     /**
      * Display the specified resource.

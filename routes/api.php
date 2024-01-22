@@ -45,6 +45,7 @@ Route::middleware(['auth:api','fondation'])->group(function(){
     Route::put('/decloturerUneCollecte/{collecteDeFond}',[collecteDeFondsController::class,"decloturerUneCollecte"]);
     Route::get('/listeCollecteEnCours',[collecteDeFondsController::class,"listeCollecteEnCours"]);
     Route::get('/listeCollecteCloturer',[collecteDeFondsController::class,"listeCollecteCloturer"]);
+    Route::delete('/supprimerCompte',[UsersController::class,"supprimerCompte"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });
 
