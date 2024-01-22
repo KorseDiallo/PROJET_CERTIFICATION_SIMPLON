@@ -41,6 +41,10 @@ Route::middleware(['auth:api','fondation'])->group(function(){
     Route::put('/modifierCollecte/{collecteDeFond}',[collecteDeFondsController::class,"update"]);
     Route::delete('/supprimerCollecte/{collecteDeFond}',[collecteDeFondsController::class,"destroy"]);
     Route::put('/modifierProfil',[collecteDeFondsController::class,"modifierProfil"]);
+    Route::put('/cloturerUneCollecte/{collecteDeFond}',[collecteDeFondsController::class,"cloturerUneCollecte"]);
+    Route::put('/decloturerUneCollecte/{collecteDeFond}',[collecteDeFondsController::class,"decloturerUneCollecte"]);
+    Route::get('/listeCollecteEnCours',[collecteDeFondsController::class,"listeCollecteEnCours"]);
+    Route::get('/listeCollecteCloturer',[collecteDeFondsController::class,"listeCollecteCloturer"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });
 
