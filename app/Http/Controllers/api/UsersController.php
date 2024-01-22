@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use OpenApi\Annotations as OA;
 
 class UsersController extends Controller
 {
@@ -28,9 +29,52 @@ class UsersController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+  /**
+ * @OA\Post(
+ *      path="/api/register",
+ *      operationId="storeUser",
+ *      tags={"Inscription"},
+ *      summary="Inscription d'un utilisateur",
+ *      description="Enregistre un nouvel utilisateur",
+ *      @OA\RequestBody(
+ *          required=true,
+ *          description="Données d'inscription de l'utilisateur",
+ *          @OA\MediaType(
+ *              mediaType="multipart/form-data",
+ *              @OA\Schema(
+ *                  @OA\Property(property="nom", type="string"),
+ *                  @OA\Property(property="prenom", type="string"),
+ *                  @OA\Property(property="image", type="string", format="binary"),
+ *                  @OA\Property(property="description", type="string"),
+ *                  @OA\Property(property="numeroEnregistrement", type="string"),
+ *                  @OA\Property(property="adresse", type="string"),
+ *                  @OA\Property(property="email", type="string", format="email"),
+ *                  @OA\Property(property="password", type="string", format="password"),
+ *                  @OA\Property(property="telephone", type="string"),
+ *                  @OA\Property(property="role", type="string", enum={"admin", "donateur", "fondation"}),
+ *              ),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Inscription réussie",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status", type="boolean", example=true),
+ *              @OA\Property(property="message", type="string", example="Inscription effectuée avec succès"),
+ *              @OA\Property(property="data", type="object"),
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Erreur lors de l'inscription",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Erreur lors de l'inscription"),
+ *          )
+ *      ),
+ * )
+ */
+
     public function store(inscriptionUsersRequest $request)
     {
        
