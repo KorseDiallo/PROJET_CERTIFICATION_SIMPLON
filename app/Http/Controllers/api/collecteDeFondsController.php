@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\collecteDeFondsRequest;
+use App\Http\Requests\modificationProfilRequest;
+use App\Http\Requests\modifierCollecteDeFondsRequest;
 use App\Models\collecteDeFonds;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -85,7 +87,7 @@ class collecteDeFondsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, collecteDeFonds $collecteDeFond)
+    public function update(modifierCollecteDeFondsRequest $request, collecteDeFonds $collecteDeFond)
     {
          // personne connectée
          $fondation = auth()->user();
@@ -127,7 +129,7 @@ class collecteDeFondsController extends Controller
          
     }
 
-    public function modifierProfil(Request $request){
+    public function modifierProfil(modificationProfilRequest $request){
          // personne connectée
          $fondation = auth()->user();
          $fondationId= $fondation->id;
@@ -166,6 +168,112 @@ class collecteDeFondsController extends Controller
          }
     }
 
+    public function cloturerUneCollecte(collecteDeFonds $collecteDeFond){
+        // personne connectée
+        $fondation = auth()->user();
+        $fondationId= $fondation->id;
+       
+
+        if($fondationId==$collecteDeFond->user_id){
+            $collecteDeFond->statut="cloturer";
+            if($collecteDeFond->save()){
+                return response()->json([
+                    "status" => true,
+                    "message" => "La collecte de Fonds a été clôturé avec succès"  
+                ]);   
+            }
+        }else{
+            return response()->json([
+                "status" => false,
+                "message" => "Vous n'etes pas propriètaire de cette collecte",
+            ]);
+        }
+       
+    }
+
+
+    public function decloturerUneCollecte(collecteDeFonds $collecteDeFond){
+          // personne connectée
+          $fondation = auth()->user();
+          $fondationId= $fondation->id;
+          
+        if($fondationId==$collecteDeFond->user_id){
+            $collecteDeFond->statut="encours";
+            if($collecteDeFond->save()){
+                return response()->json([
+                    "status" => true,
+                    "message" => "La collecte de Fonds a été declôturé avec succès"
+                    
+                ]);   
+            }
+        }else{
+            return response()->json([
+                "status" => false,
+                "message" => "Vous n'etes pas propriètaire de cette collecte",
+            ]);
+        }
+      
+    }
+
+    public function listeCollecteEnCours(){
+        $listeCollecteEnCours= collecteDeFonds::where('statut','encours')->get();
+
+         // Filtrer les attributs non vides avant de les renvoyer
+        $listeCollecteEnCours = $listeCollecteEnCours->map(function ($collecteDeFond) {
+            return collect($collecteDeFond->toArray())->filter(function ($value) {
+                return !is_null($value) && $value !== '';
+            })->all();
+        });
+
+       
+
+        if($listeCollecteEnCours->isNotEmpty()){
+            return response()->json([
+                "status" => true,
+                "message" => "Liste de toutes les collectes de fonds en cours",
+                "data" => $listeCollecteEnCours
+                
+            ]); 
+        }else{
+            return response()->json([
+                "status" => false,
+                "message" => "Vous avez aucune collecte de fond en cours pour le moment",
+                "data" => []
+                
+            ]); 
+        }
+    }
+
+    public function listeCollecteCloturer(){
+        $listeCollecteCloturer= collecteDeFonds::where('statut','cloturer')->get();
+
+         // Filtrer les attributs non vides avant de les renvoyer
+        $listeCollecteCloturer = $listeCollecteCloturer->map(function ($collecteDeFond) {
+            return collect($collecteDeFond->toArray())->filter(function ($value) {
+                return !is_null($value) && $value !== '';
+            })->all();
+        });
+
+       
+
+        if($listeCollecteCloturer->isNotEmpty()){
+            return response()->json([
+                "status" => true,
+                "message" => "Liste de toutes les collectes de fonds clôturer",
+                "data" => $listeCollecteCloturer
+                
+            ]); 
+        }else{
+            return response()->json([
+                "status" => false,
+                "message" => "Vous avez aucune collecte de fond cloturer pour le moment",
+                "data" => []
+                
+            ]); 
+        }
+    }
+
+   
     /**
      * Remove the specified resource from storage.
      */

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('image');
             $table->string('objectifFinancier');
             $table->string('numeroCompte');
-            $table->enum('statut', ['encours', 'cloturer', 'decloturer'])->default('encours');
+            $table->enum('statut', ['encours', 'cloturer'])->default('encours');
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
            

@@ -232,7 +232,7 @@ public function dashboardAdmin(){
         }else{
             return response()->json([
                 "status" => false,
-                "message" => "Vous avez aucune donnateur inscrit pour le moment",
+                "message" => "Vous avez aucun donnateur inscrit pour le moment",
                 "data" => []
                 
             ]); 
