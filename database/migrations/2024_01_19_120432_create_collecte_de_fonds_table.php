@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('objectifFinancier');
             $table->string('numeroCompte');
             $table->enum('statut', ['encours', 'cloturer'])->default('encours');
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
            
         });

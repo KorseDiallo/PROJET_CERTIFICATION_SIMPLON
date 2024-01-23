@@ -11,6 +11,16 @@ use Illuminate\Support\Facades\Auth;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use OpenApi\Annotations as OA;
 
+/**
+ 
+*@OA\SecurityScheme(
+*securityScheme="bearerAuth",
+*type="http",
+*scheme="bearer",
+*bearerFormat="JWT",
+*)
+*/
+
 class UsersController extends Controller
 {
     /**
@@ -203,21 +213,22 @@ public function dashboardAdmin(){
     {
         return $image->store('images', 'public');
     }
-
-    /**
+/**
  * @OA\Post(
  *     path="/api/approuver/{user}",
- *     summary="Approuver une demande",
+ *     summary="Approuver une demande d'inscription pour une fondation",
  *     description="Cette endpoint permet d'approuver une demande en mettant à jour le statut de l'utilisateur.",
  *     operationId="approuverDemande",
- *     tags={"Demandes"},
- *     @OA\RequestBody(
+ *     tags={"Approuver une demande d'inscription pour une fondation"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Parameter(
+ *         name="user",
+ *         in="path",
  *         required=true,
- *         description="Données de la demande",
- *         @OA\JsonContent(
- *             required={"user"},
- *             @OA\Property(property="user"),
- *         ),
+ *         description="ID de l'utilisateur dont la demande sera approuvée",
+ *         @OA\Schema(type="integer")
  *     ),
  *     @OA\Response(
  *         response=200,
@@ -236,9 +247,6 @@ public function dashboardAdmin(){
  *         ),
  *     ),
  * )
- *
- * @param User $user
- * @return \Illuminate\Http\JsonResponse
  */
 
     public function approuverDemande(User $user){
@@ -251,6 +259,43 @@ public function dashboardAdmin(){
             ]);   
         }
     }
+/**
+ * @OA\Post(
+ *     path="/api/refuserDemande/{user}",
+ *     summary="Refuser une demande d'utilisateur",
+ *     tags={"Refuser une demande d'inscription pour une fondation"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Parameter(
+ *         name="user",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer"),
+ *         description="ID de l'utilisateur à refuser"
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Opération réussie",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Demande refusée avec succès")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Utilisateur non trouvé",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="error", type="string", example="Utilisateur non trouvé")
+ *         )
+ *     )
+ * )
+ *
+ * Refuser une demande d'utilisateur.
+ *
+ * @param  \App\Models\User  $user
+ * @return \Illuminate\Http\JsonResponse
+ */
 
     public function refuserDemande(User $user){
         $user->statut='refuse';
@@ -263,6 +308,44 @@ public function dashboardAdmin(){
         }
     }
 
+   /**
+ * @OA\Post(
+ *     path="/api/bloquer/{user}",
+ *     summary="Bloquer un utilisateur",
+ *     tags={"Bloquer une fondation ou un donateur"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Parameter(
+ *         name="user",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer"),
+ *         description="ID de l'utilisateur à bloquer"
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Opération réussie",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="L'utilisateur a été bloqué avec succès")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Utilisateur non trouvé",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="error", type="string", example="Utilisateur non trouvé")
+ *         )
+ *     )
+ * )
+ *
+ * Bloquer un utilisateur.
+ *
+ * @param  \App\Models\User  $user
+ * @return \Illuminate\Http\JsonResponse
+ */
+
     public function bloquer(User $user){
         $user->bloque=true;
         if($user->save()){
@@ -273,6 +356,44 @@ public function dashboardAdmin(){
             ]);   
         }
     }
+
+  /**
+ * @OA\Post(
+ *     path="/api/debloquer/{user}",
+ *     summary="Débloquer un utilisateur",
+ *     tags={"Débloquer une Fondation ou un Donateur"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Parameter(
+ *         name="user",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer"),
+ *         description="ID de l'utilisateur à débloquer"
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Opération réussie",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="L'utilisateur a été débloqué avec succès")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Utilisateur non trouvé",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="error", type="string", example="Utilisateur non trouvé")
+ *         )
+ *     )
+ * )
+ *
+ * Débloquer un utilisateur.
+ *
+ * @param  \App\Models\User  $user
+ * @return \Illuminate\Http\JsonResponse
+ */
 
     public function debloquer(User $user){
         $user->bloque=false;
@@ -285,7 +406,28 @@ public function dashboardAdmin(){
         }
     }
 
-   
+
+    /**
+ * @OA\Post(
+ *     path="/api/logout",
+ *     summary="Déconnexion de l'utilisateur",
+ *     tags={"Deconnexion d'un utilisateur"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Response(
+ *         response=200,
+ *         description="Déconnexion réussie",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Déconnexion effectuée avec succès")
+ *         )
+ *     )
+ * )
+ *
+ * Déconnecte l'utilisateur.
+ *
+ * @return \Illuminate\Http\JsonResponse
+ */
 
     public function logout()
     {
@@ -294,6 +436,39 @@ public function dashboardAdmin(){
             'message' => 'Deconnexion Effectuée avec Succès',
         ]);
     }
+
+/**
+ * @OA\Get(
+ *     path="/api/listeDonateur",
+ *     summary="Liste de tous les donateurs",
+ *     tags={"Liste de tous les donateurs"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Response(
+ *         response=200,
+ *         description="Succès de la récupération de la liste des donateurs",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Liste de tous les donateurs"),
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Aucun donateur inscrit pour le moment",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Aucun donateur inscrit pour le moment"),
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object")) 
+ *         )
+ *     )
+ * )
+ *
+ * Récupérer la liste de tous les donateurs.
+ *
+ * @return \Illuminate\Http\JsonResponse
+ */
 
     public function listeDonateur(){
         $listeDonateur= User::where('role','donateur')->get();
@@ -321,6 +496,41 @@ public function dashboardAdmin(){
             ]); 
         }
     }
+
+
+ /**
+ * @OA\Get(
+ *     path="/api/listeFondation",
+ *     summary="Liste de toutes les fondations",
+ *     tags={"Liste de toutes les fondations"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Response(
+ *         response=200,
+ *         description="Succès de la récupération de la liste des fondations",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Liste de toutes les fondations"),
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Aucune fondation inscrite pour le moment",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Aucune fondation inscrite pour le moment"),
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+ *         )
+ *     )
+ * )
+ *
+ * Récupérer la liste de toutes les fondations.
+ *
+ * @return \Illuminate\Http\JsonResponse
+ */
+ 
 
     public function listeFondation(){
         $listeFondation= User::where('role','fondation')->get();
@@ -350,6 +560,38 @@ public function dashboardAdmin(){
             ]); 
         }
     }
+
+
+    /**
+ * @OA\Delete(
+ *     path="/api/supprimerCompte",
+ *     summary="Supprimer le compte de l'utilisateur connecté",
+ *     tags={"Suppression d'un compte par un donateur ou une fondation"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Response(
+ *         response=200,
+ *         description="Le compte a été supprimé avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Votre Compte a été supprimé avec succès")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Vous n'êtes pas autorisé à supprimer ce compte",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Vous n'êtes pas autorisé à supprimer ce compte")
+ *         )
+ *     )
+ * )
+ *
+ * Supprimer le compte de l'utilisateur connecté.
+ *
+ * @return \Illuminate\Http\JsonResponse
+ */
 
     public function supprimerCompte(){
        
@@ -397,9 +639,46 @@ public function dashboardAdmin(){
         //
     }
 
+
+
     /**
-     * Remove the specified resource from storage.
-     */
+ * @OA\Delete(
+ *     path="/api/supprimer/{user}",
+ *     summary="Supprimer un utilisateur",
+ *     tags={"Suppression d'un donateur ou d'une fondation par l'administrateur"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Parameter(
+ *         name="user",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer"),
+ *         description="ID de l'utilisateur à supprimer"
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="L'utilisateur a été supprimé avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="L'utilisateur a été supprimé avec succès")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Utilisateur non trouvé",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Utilisateur non trouvé")
+ *         )
+ *     )
+ * )
+ *
+ * Supprimer un utilisateur.
+ *
+ * @param  \App\Models\User  $user
+ * @return \Illuminate\Http\JsonResponse
+ */
     public function destroy(User $user)
     {
         if($user->delete()){
