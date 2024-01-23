@@ -841,7 +841,7 @@
             }
         },
         "/api/modifierCollecte/{collecteDeFond}": {
-            "put": {
+            "post": {
                 "tags": [
                     "Modifier Une Collecte De Fonds"
                 ],

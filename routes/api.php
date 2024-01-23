@@ -38,7 +38,7 @@ Route::middleware(['auth:api','donateur'])->group(function(){
 
 Route::middleware(['auth:api','fondation'])->group(function(){
     Route::post('/creerCollecte',[collecteDeFondsController::class,"store"]);
-    Route::put('/modifierCollecte/{collecteDeFond}',[collecteDeFondsController::class,"update"]);
+    Route::post('/modifierCollecte/{collecteDeFond}',[collecteDeFondsController::class,"update"]);
     Route::delete('/supprimerCollecte/{collecteDeFond}',[collecteDeFondsController::class,"destroy"]);
     Route::put('/modifierProfil',[collecteDeFondsController::class,"modifierProfil"]);
     Route::put('/cloturerUneCollecte/{collecteDeFond}',[collecteDeFondsController::class,"cloturerUneCollecte"]);

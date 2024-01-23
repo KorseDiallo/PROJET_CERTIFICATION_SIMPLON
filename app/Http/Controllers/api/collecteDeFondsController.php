@@ -137,7 +137,7 @@ class collecteDeFondsController extends Controller
    
 
     /**
- * @OA\Put(
+ * @OA\Post(
  *     path="/api/modifierCollecte/{collecteDeFond}",
  *     summary="Modifier une collecte de fonds",
  *     description="Cette endpoint permet à une fondation de modifier une collecte de fonds existante.",
