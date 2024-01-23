@@ -234,6 +234,64 @@ class collecteDeFondsController extends Controller
         }
     }
 
+    /**
+ * @OA\Post(
+ *     path="/api/modifierProfil",
+ *     summary="Modifier le profil de l'utilisateur connecté",
+ *     description="Cette endpoint permet à un utilisateur de modifier son propre profil.",
+ *     operationId="modifierProfil",
+ *     tags={"Modifier le Profil"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\RequestBody(
+ *         required=true,
+ *         description="Données du profil à modifier",
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 @OA\Property(property="nom", type="string", description="Nom "),
+ *                 @OA\Property(property="prenom", type="string", description="Prénom "),
+ *                 @OA\Property(property="image", type="file", description="Image"),
+ *                 @OA\Property(property="description", type="string", description="Description"),
+ *                 @OA\Property(property="numeroEnregistrement", type="string", description="Numéro d'enregistrement"),
+ *                 @OA\Property(property="adresse", type="string", description="Adresse de l'utilisateur"),
+ *                 @OA\Property(property="email", type="string", format="email", description="Email"),
+ *                 @OA\Property(property="password", type="string", format="password", description="password"),
+ *                 @OA\Property(property="telephone", type="string", description="Téléphone"),
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Le profil a été modifié avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Le profil a été modifié avec succès"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Erreur lors de la modification du profil",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Erreur lors de la modification du profil"),
+ *             @OA\Property(property="data", type="null")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Vous n'êtes pas propriétaire du profil",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Vous n'êtes pas propriétaire du profil"),
+ *             @OA\Property(property="data", type="null")
+ *         )
+ *     )
+ * )
+ */
+
     public function modifierProfil(modificationProfilRequest $request)
     {
         // personne connectée
@@ -273,6 +331,51 @@ class collecteDeFondsController extends Controller
         }
     }
 
+    /**
+ * @OA\Put(
+ *     path="/api/cloturerUneCollecte/{collecteDeFond}",
+ *     summary="Clôturer une collecte de fonds",
+ *     description="Cette endpoint permet à une fondation de clôturer une collecte de fonds existante.",
+ *     operationId="cloturerCollecteDeFonds",
+ *     tags={"Clôturer Une Collecte De Fonds"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Parameter(
+ *         name="collecteDeFond",
+ *         in="path",
+ *         required=true,
+ *         description="ID de la collecte de fonds à clôturer",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="La collecte de fonds a été clôturée avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="La collecte de fonds a été clôturée avec succès"),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Erreur lors de la clôture de la collecte de fonds",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Erreur lors de la clôture de la collecte de fonds"),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="La collecte de fonds ne vous appartient pas",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="La collecte de fonds ne vous appartient pas"),
+ *         )
+ *     )
+ * )
+ */
+
+
     public function cloturerUneCollecte(collecteDeFonds $collecteDeFond)
     {
         // personne connectée
@@ -295,6 +398,50 @@ class collecteDeFondsController extends Controller
             ]);
         }
     }
+
+    /**
+ * @OA\Put(
+ *     path="/api/decloturerUneCollecte/{collecteDeFond}",
+ *     summary="Déclôturer une collecte de fonds",
+ *     description="Cette endpoint permet à une fondation de déclôturer une collecte de fonds existante.",
+ *     operationId="decloturerCollecteDeFonds",
+ *     tags={"Déclôturer Une Collecte De Fonds"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Parameter(
+ *         name="collecteDeFond",
+ *         in="path",
+ *         required=true,
+ *         description="ID de la collecte de fonds à déclôturer",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="La collecte de fonds a été déclôturée avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="La collecte de fonds a été déclôturée avec succès"),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Erreur lors du déclôture de la collecte de fonds",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Erreur lors du déclôture de la collecte de fonds"),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="La collecte de fonds ne vous appartient pas",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="La collecte de fonds ne vous appartient pas"),
+ *         )
+ *     )
+ * )
+ */
 
 
     public function decloturerUneCollecte(collecteDeFonds $collecteDeFond)
@@ -349,6 +496,38 @@ class collecteDeFondsController extends Controller
             ]);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/listeCollecteCloturer",
+ *     summary="Liste des collectes de fonds clôturées",
+ *     description="Cette endpoint permet d'obtenir la liste de toutes les collectes de fonds clôturées.",
+ *     operationId="listeCollecteCloturer",
+ *     tags={"Liste Collectes Clôturées"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Response(
+ *         response=200,
+ *         description="Liste de toutes les collectes de fonds clôturées",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Liste de toutes les collectes de fonds clôturées"),
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object")),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Aucune collecte de fond clôturée pour le moment",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Aucune collecte de fond clôturée pour le moment"),
+ *             @OA\Property(property="data", type="array"),
+ *         )
+ *     ),
+ * )
+ */
+
 
     public function listeCollecteCloturer()
     {

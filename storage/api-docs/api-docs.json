@@ -969,6 +969,319 @@
                     }
                 ]
             }
+        },
+        "/api/modifierProfil": {
+            "post": {
+                "tags": [
+                    "Modifier le Profil"
+                ],
+                "summary": "Modifier le profil de l'utilisateur connecté",
+                "description": "Cette endpoint permet à un utilisateur de modifier son propre profil.",
+                "operationId": "modifierProfil",
+                "requestBody": {
+                    "description": "Données du profil à modifier",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "nom": {
+                                        "description": "Nom ",
+                                        "type": "string"
+                                    },
+                                    "prenom": {
+                                        "description": "Prénom ",
+                                        "type": "string"
+                                    },
+                                    "image": {
+                                        "description": "Image",
+                                        "type": "file"
+                                    },
+                                    "description": {
+                                        "description": "Description",
+                                        "type": "string"
+                                    },
+                                    "numeroEnregistrement": {
+                                        "description": "Numéro d'enregistrement",
+                                        "type": "string"
+                                    },
+                                    "adresse": {
+                                        "description": "Adresse de l'utilisateur",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "Email",
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "description": "password",
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "telephone": {
+                                        "description": "Téléphone",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Le profil a été modifié avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le profil a été modifié avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erreur lors de la modification du profil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erreur lors de la modification du profil"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Vous n'êtes pas propriétaire du profil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Vous n'êtes pas propriétaire du profil"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/cloturerUneCollecte/{collecteDeFond}": {
+            "put": {
+                "tags": [
+                    "Clôturer Une Collecte De Fonds"
+                ],
+                "summary": "Clôturer une collecte de fonds",
+                "description": "Cette endpoint permet à une fondation de clôturer une collecte de fonds existante.",
+                "operationId": "cloturerCollecteDeFonds",
+                "parameters": [
+                    {
+                        "name": "collecteDeFond",
+                        "in": "path",
+                        "description": "ID de la collecte de fonds à clôturer",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "La collecte de fonds a été clôturée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La collecte de fonds a été clôturée avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erreur lors de la clôture de la collecte de fonds",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erreur lors de la clôture de la collecte de fonds"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "La collecte de fonds ne vous appartient pas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La collecte de fonds ne vous appartient pas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/decloturerUneCollecte/{collecteDeFond}": {
+            "put": {
+                "tags": [
+                    "Déclôturer Une Collecte De Fonds"
+                ],
+                "summary": "Déclôturer une collecte de fonds",
+                "description": "Cette endpoint permet à une fondation de déclôturer une collecte de fonds existante.",
+                "operationId": "decloturerCollecteDeFonds",
+                "parameters": [
+                    {
+                        "name": "collecteDeFond",
+                        "in": "path",
+                        "description": "ID de la collecte de fonds à déclôturer",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "La collecte de fonds a été déclôturée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La collecte de fonds a été déclôturée avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erreur lors du déclôture de la collecte de fonds",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erreur lors du déclôture de la collecte de fonds"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "La collecte de fonds ne vous appartient pas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La collecte de fonds ne vous appartient pas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
