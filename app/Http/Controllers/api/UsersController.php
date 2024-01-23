@@ -119,6 +119,46 @@ class UsersController extends Controller
     }
 }
 
+/**
+ * @OA\Post(
+ *      path="/api/login",
+ *      operationId="loginUser",
+ *      tags={"Authentification"},
+ *      summary="Authentification d'un utilisateur",
+ *      description="Connecte un utilisateur avec ses identifiants",
+ *      @OA\RequestBody(
+ *          required=true,
+ *          description="Données d'authentification de l'utilisateur",
+ *          @OA\MediaType(
+ *              mediaType="multipart/form-data",
+ *              @OA\Schema(
+ *                  @OA\Property(property="email", type="string", format="email"),
+ *                  @OA\Property(property="password", type="string", format="password"),
+ *              ),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Authentification réussie",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status", type="boolean", example=true),
+ *              @OA\Property(property="message", type="string", example="Vous êtes connecté en tant qu'administrateur"),
+ *              @OA\Property(property="token", type="string"),
+ *              @OA\Property(property="role", type="string", enum={"admin", "donateur", "fondation"}),
+ *              @OA\Property(property="datas", type="object"),
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Identifiants invalides",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Les Identifiants sont invalides"),
+ *          )
+ *      ),
+ * )
+ */
+
 public function login(loginUsersRequest $request){
    
 
@@ -163,6 +203,43 @@ public function dashboardAdmin(){
     {
         return $image->store('images', 'public');
     }
+
+    /**
+ * @OA\Post(
+ *     path="/api/approuver/{user}",
+ *     summary="Approuver une demande",
+ *     description="Cette endpoint permet d'approuver une demande en mettant à jour le statut de l'utilisateur.",
+ *     operationId="approuverDemande",
+ *     tags={"Demandes"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         description="Données de la demande",
+ *         @OA\JsonContent(
+ *             required={"user"},
+ *             @OA\Property(property="user"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Demande approuvée avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Demande approuvée avec succès"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Erreur de validation des données",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Erreur de validation des données"),
+ *         ),
+ *     ),
+ * )
+ *
+ * @param User $user
+ * @return \Illuminate\Http\JsonResponse
+ */
 
     public function approuverDemande(User $user){
         $user->statut='accepte';
