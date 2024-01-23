@@ -746,11 +746,239 @@
                     }
                 ]
             }
+        },
+        "/api/creerCollecte": {
+            "post": {
+                "tags": [
+                    "Creer Une Collecte De Fonds"
+                ],
+                "summary": "Créer une nouvelle collecte de fonds",
+                "description": "Cette endpoint permet à une fondation de créer une nouvelle collecte de fonds.",
+                "operationId": "createCollecteDeFonds",
+                "requestBody": {
+                    "description": "Données de la collecte de fonds à créer",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "titre": {
+                                        "description": "Titre de la collecte",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "Description de la collecte",
+                                        "type": "string"
+                                    },
+                                    "image": {
+                                        "description": "Image de la collecte",
+                                        "type": "file"
+                                    },
+                                    "objectifFinancier": {
+                                        "description": "Objectif financier de la collecte",
+                                        "type": "string"
+                                    },
+                                    "numeroCompte": {
+                                        "description": "Numéro de compte de la collecte",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "La Collecte de Fonds a été bien créée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La Collecte de Fonds a été bien créée"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erreur lors de la création de la collecte",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erreur lors de la création de la collecte"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/modifierCollecte/{collecteDeFond}": {
+            "put": {
+                "tags": [
+                    "Modifier Une Collecte De Fonds"
+                ],
+                "summary": "Modifier une collecte de fonds",
+                "description": "Cette endpoint permet à une fondation de modifier une collecte de fonds existante.",
+                "operationId": "updateCollecteDeFonds",
+                "parameters": [
+                    {
+                        "name": "collecteDeFond",
+                        "in": "path",
+                        "description": "ID de la collecte de fonds à modifier",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Données de la collecte de fonds à modifier",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "titre": {
+                                        "description": "Titre de la collecte",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "Description de la collecte",
+                                        "type": "string"
+                                    },
+                                    "image": {
+                                        "description": "Nouvelle image de la collecte",
+                                        "type": "file"
+                                    },
+                                    "objectifFinancier": {
+                                        "description": "Nouvel objectif financier de la collecte",
+                                        "type": "string"
+                                    },
+                                    "numeroCompte": {
+                                        "description": "Nouveau numéro de compte de la collecte",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "La Collecte de Fonds a été bien modifiée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La Collecte de Fonds a été bien modifiée"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erreur lors de la modification de la collecte de fonds",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erreur lors de la modification de la collecte de fonds"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "La collecte de fonds ne vous appartient pas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La collecte de fonds ne vous appartient pas"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "securitySchemes": {
             "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            },
+            "bearerAuths": {
                 "type": "http",
                 "bearerFormat": "JWT",
                 "scheme": "bearer"
