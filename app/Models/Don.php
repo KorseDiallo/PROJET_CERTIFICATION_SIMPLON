@@ -5,11 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class collecteDeFonds extends Model
+class Don extends Model
 {
     use HasFactory;
-
-    public function fondation(){
-        return $this->belongsTo(User::class);
-    }
 }

@@ -63,4 +63,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function collecteDeFonds(){
+        return $this->hasMany(collecteDeFonds::class);
+    }
 }
