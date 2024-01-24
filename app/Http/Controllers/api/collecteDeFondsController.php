@@ -467,6 +467,48 @@ class collecteDeFondsController extends Controller
         }
     }
 
+    /**
+ * Récupérer la liste de toutes les collectes de fonds clôturées pour la personne connectée.
+ *
+ * @return \Illuminate\Http\JsonResponse
+ *
+ * @OA\Get(
+ *     path="/api/listeCollecteEnCours",
+ *     summary="Liste de toutes les collectes de fonds en cours pour la personne connectée",
+ *     tags={"Liste de toutes les collectes de fonds en cours"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Response(
+ *         response=200,
+ *         description="Liste des collectes de fonds en cours",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Liste de toutes les collectes de fonds en cours"),
+ *             @OA\Property(property="data", type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="id", type="integer"),
+ *                     @OA\Property(property="autre_propriete", type="string"),
+ *                   
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Aucune collecte de fond en cours pour le moment",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Vous n'avez aucune collecte de fond en cours pour le moment"),
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+ *         )
+ *     )
+ * )
+ */
+
     public function listeCollecteEnCours()
     {
          // personne connectée
@@ -476,7 +518,7 @@ class collecteDeFondsController extends Controller
         $listeCollecteEnCours = collecteDeFonds::where('statut', 'encours')
                 ->where('user_id',$fondationId)->get();
       
-            
+
         if ($listeCollecteEnCours->isNotEmpty()) {
             return response()->json([
                 "status" => true,
@@ -494,37 +536,47 @@ class collecteDeFondsController extends Controller
         }
     }
 
-    /**
+/**
+ * Récupérer la liste de toutes les collectes de fonds clôturées pour la personne connectée.
+ *
+ * @return \Illuminate\Http\JsonResponse
+ *
  * @OA\Get(
  *     path="/api/listeCollecteCloturer",
- *     summary="Liste des collectes de fonds clôturées",
- *     description="Cette endpoint permet d'obtenir la liste de toutes les collectes de fonds clôturées.",
- *     operationId="listeCollecteCloturer",
- *     tags={"Liste Collectes Clôturées"},
+ *     summary="Liste de toutes les collectes de fonds clôturées pour la personne connectée",
+ *     tags={"Liste de toutes les collectes de fonds Cloturer"},
  *     security={
  *         {"bearerAuth": {}}
  *     },
  *     @OA\Response(
  *         response=200,
- *         description="Liste de toutes les collectes de fonds clôturées",
+ *         description="Liste des collectes de fonds clôturées",
  *         @OA\JsonContent(
+ *             type="object",
  *             @OA\Property(property="status", type="boolean", example=true),
  *             @OA\Property(property="message", type="string", example="Liste de toutes les collectes de fonds clôturées"),
- *             @OA\Property(property="data", type="array", @OA\Items(type="object")),
+ *             @OA\Property(property="data", type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="id", type="integer"),
+ *                     @OA\Property(property="autre_propriete", type="string"),
+ *                   
+ *                 )
+ *             )
  *         )
  *     ),
  *     @OA\Response(
  *         response=404,
  *         description="Aucune collecte de fond clôturée pour le moment",
  *         @OA\JsonContent(
+ *             type="object",
  *             @OA\Property(property="status", type="boolean", example=false),
- *             @OA\Property(property="message", type="string", example="Aucune collecte de fond clôturée pour le moment"),
- *             @OA\Property(property="data", type="array"),
+ *             @OA\Property(property="message", type="string", example="Vous n'avez aucune collecte de fond clôturée pour le moment"),
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
  *         )
- *     ),
+ *     )
  * )
  */
-
 
     public function listeCollecteCloturer()
     {
