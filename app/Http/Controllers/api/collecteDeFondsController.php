@@ -605,65 +605,98 @@ class collecteDeFondsController extends Controller
         }
     }
 
-    public function supprimerCompte(Request $request)
-    {
-        // $user= Auth::user();
-        // $user->is_deleted=true;
 
-        $userressource = User::where('id', Auth::user()->id)->first();
-        $credentials = [
-            "email" => $userressource->email,
-            "password" => request('password')
-        ];
+ /**
+ * Supprimer une collecte de fonds.
+ *
+ * @param \App\Models\CollecteDeFonds $collecteDeFond
+ * @return \Illuminate\Http\JsonResponse
+ *
+ * @OA\Delete(
+ *     path="/api/supprimerCollecte/{collecteDeFond}",
+ *     summary="Supprimer une collecte de fonds",
+ *     tags={"Suppression d'une Collecte de Fonds par une Fondation"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Parameter(
+ *         name="collecteDeFond",
+ *         in="path",
+ *         required=true,
+ *         description="ID de la collecte de fonds à supprimer",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="La collecte de fonds a été bien supprimée",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="La collecte de fonds a été bien supprimée"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="La collecte de fonds ne vous appartient pas, vous ne pouvez pas la supprimer",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="La collecte de fonds ne vous appartient pas, vous ne pouvez pas la supprimer"),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="La collecte de fonds n'a pas été trouvée dans la base de données",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="La collecte de fonds n'a pas été trouvée dans la base de données"),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Erreur lors de la suppression de la collecte de fonds",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Erreur lors de la suppression de la collecte de fonds"),
+ *         )
+ *     )
+ * )
+ */
+public function destroy(collecteDeFonds $collecteDeFond)
+{
+    // personne connectée
+    $fondation = auth()->user();
+    $fondationId = $fondation->id;
 
-       
-        if ($token = Auth::attempt($credentials)) {
-            $userressource->is_deleted = true;
+    if ($fondationId == $collecteDeFond->user_id) {
+        // Vérifier si la collecte de fonds existe avant de la supprimer
+        $collecteExiste= collecteDeFonds::findOrFail($collecteDeFond->id);
 
-            $userressource->update();
-            return response()->json([
-                "status" => true,
-                "message" => "Votre Compte a été supprimé avec succès"
-
-            ]);
-        } else {
-            return response()->json([
-                "status" => false,
-                "message" => "Vous n'etes pas proritaire du compte"
-
-            ]);
-        }
-    }
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(collecteDeFonds $collecteDeFond)
-    {
-        // personne connectée
-        $fondation = auth()->user();
-        $fondationId = $fondation->id;
-
-        if ($fondationId == $collecteDeFond->user_id) {
-            if ($collecteDeFond->delete()) {
+        if ($collecteExiste) {
+            if ($collecteExiste->delete()) {
                 return response()->json([
                     "status" => true,
                     "message" => "La Collecte de Fonds a été bien supprimée",
-                    "data" => $collecteDeFond
+                    "data" => $collecteExiste
                 ]);
             } else {
                 return response()->json([
                     "status" => false,
-                    "message" => "Erreur lors de la suppression de la collecte de fonds ",
-
-                ]);
+                    "message" => "Erreur lors de la suppression de la collecte de fonds",
+                ], 500);
             }
         } else {
             return response()->json([
                 "status" => false,
-                "message" => "la collecte de fonds vous appartient pas du coup vous pouvez pas la supprimer",
-            ]);
+                "message" => "La collecte de fonds n'a pas été trouvée dans la base de données",
+            ], 404);
         }
+    } else {
+        return response()->json([
+            "status" => false,
+            "message" => "La collecte de fonds ne vous appartient pas, vous ne pouvez pas la supprimer",
+        ], 403);
     }
+}
+
+
 }

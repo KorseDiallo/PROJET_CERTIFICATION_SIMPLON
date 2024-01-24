@@ -1436,6 +1436,117 @@
                     }
                 ]
             }
+        },
+        "/api/supprimerCollecte/{collecteDeFond}": {
+            "delete": {
+                "tags": [
+                    "Suppression d'une Collecte de Fonds par une Fondation"
+                ],
+                "summary": "Supprimer une collecte de fonds",
+                "description": "Supprimer une collecte de fonds.",
+                "operationId": "5259824514f74ab11516b0f817d5dd56",
+                "parameters": [
+                    {
+                        "name": "collecteDeFond",
+                        "in": "path",
+                        "description": "ID de la collecte de fonds à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "La collecte de fonds a été bien supprimée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La collecte de fonds a été bien supprimée"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "La collecte de fonds ne vous appartient pas, vous ne pouvez pas la supprimer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La collecte de fonds ne vous appartient pas, vous ne pouvez pas la supprimer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "La collecte de fonds n'a pas été trouvée dans la base de données",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La collecte de fonds n'a pas été trouvée dans la base de données"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur lors de la suppression de la collecte de fonds",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erreur lors de la suppression de la collecte de fonds"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
