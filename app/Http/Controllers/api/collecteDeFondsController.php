@@ -469,17 +469,14 @@ class collecteDeFondsController extends Controller
 
     public function listeCollecteEnCours()
     {
-        $listeCollecteEnCours = collecteDeFonds::where('statut', 'encours')->get();
+         // personne connectée
+         $fondation = auth()->user();
+         $fondationId = $fondation->id;
 
-        // Filtrer les attributs non vides avant de les renvoyer
-        $listeCollecteEnCours = $listeCollecteEnCours->map(function ($collecteDeFond) {
-            return collect($collecteDeFond->toArray())->filter(function ($value) {
-                return !is_null($value) && $value !== '';
-            })->all();
-        });
-
-
-
+        $listeCollecteEnCours = collecteDeFonds::where('statut', 'encours')
+                ->where('user_id',$fondationId)->get();
+      
+            
         if ($listeCollecteEnCours->isNotEmpty()) {
             return response()->json([
                 "status" => true,
@@ -531,15 +528,12 @@ class collecteDeFondsController extends Controller
 
     public function listeCollecteCloturer()
     {
-        $listeCollecteCloturer = collecteDeFonds::where('statut', 'cloturer')->get();
+         // personne connectée
+         $fondation = auth()->user();
+         $fondationId = $fondation->id;
 
-        // Filtrer les attributs non vides avant de les renvoyer
-        $listeCollecteCloturer = $listeCollecteCloturer->map(function ($collecteDeFond) {
-            return collect($collecteDeFond->toArray())->filter(function ($value) {
-                return !is_null($value) && $value !== '';
-            })->all();
-        });
-
+        $listeCollecteCloturer = collecteDeFonds::where('statut', 'cloturer')
+                ->where('user_id',$fondationId)->get();
 
 
         if ($listeCollecteCloturer->isNotEmpty()) {
