@@ -1360,6 +1360,83 @@
                 ]
             }
         },
+        "/api/listeCollecte": {
+            "get": {
+                "tags": [
+                    "Donnateur: Liste de toutes les collectes de fonds en cours"
+                ],
+                "summary": "Liste de toutes les collectes de fonds en cours ",
+                "description": "Récupérer la liste de toutes les collectes de fonds clôturées pour la personne connectée.",
+                "operationId": "1ad9db98699cc8cb8e74aa4eb63691ea",
+                "responses": {
+                    "200": {
+                        "description": "Liste des collectes de fonds en cours",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Liste de toutes les collectes de fonds en cours"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "autre_propriete": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aucune collecte de fond en cours pour le moment",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Vous n'avez aucune collecte de fond en cours pour le moment"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/listeCollecteCloturer": {
             "get": {
                 "tags": [

@@ -33,7 +33,10 @@ Route::middleware(['auth:api','admin'])->group(function(){
 });
 
 Route::middleware(['auth:api','donateur'])->group(function(){
-
+    Route::get('/listeCollecte',[collecteDeFondsController::class,"listeCollecte"]);
+    Route::put('/supprimerCompte',[UsersController::class,"supprimerCompte"]);
+    Route::post('/modifierProfil',[collecteDeFondsController::class,"modifierProfil"]);
+    Route::get('/logout',[UsersController::class,"logout"]);
 });
 
 Route::middleware(['auth:api','fondation'])->group(function(){
