@@ -12,4 +12,8 @@ class collecteDeFonds extends Model
     public function fondation(){
         return $this->belongsTo(User::class);
     }
+
+    public function dons(){
+        return $this->hasMany(Payment::class);
+    }
 }

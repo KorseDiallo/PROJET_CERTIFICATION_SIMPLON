@@ -8,4 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Don extends Model
 {
     use HasFactory;
+
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function collecteDeFond(){
+        return $this->belongsTo(collecteDeFonds::class);
+    }
+
+    
 }
+
+
+
+

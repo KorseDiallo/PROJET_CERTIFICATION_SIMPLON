@@ -1,0 +1,6 @@
+<?php 
+
+return [
+    'PAYTECH_API_KEY' => '2da0011f368cd38b1755425ff9d44fa64fa91a1bbe0a617bf68b2d1541891c91',
+    'PAYTECH_SECRET_KEY' => '844786bd294eacf3490aa2e799c9e36b1bb3cbd3f64315c1d82a21bf69eff230'
+];
