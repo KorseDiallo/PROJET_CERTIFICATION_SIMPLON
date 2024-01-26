@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\collecteDeFondsController;
+use App\Http\Controllers\api\PayementController;
 use App\Http\Controllers\api\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,13 +32,31 @@ Route::middleware(['auth:api','admin'])->group(function(){
     Route::get('/listeFondation',[UsersController::class,"listeFondation"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });
+// Route::get('payments', [PayementController::class, 'index'])->name('payment.index');
+// Route::post('/checkout', [PayementController::class, 'payment'])->name('payment.submit');
+// Route::get('ipn', [PayementController::class, 'ipn'])->name('paytech-ipn');
+// Route::get('payment-success/{code}', [PayementController::class, 'success'])->name('payment.success');
+// Route::get('payment/{code}/success', [PayementController::class, 'paymentSuccessView'])->name('payment.success.view');
+// Route::get('payment-cancel', [PayementController::class, 'cancel'])->name('paytech.cancel');
 
 Route::middleware(['auth:api','donateur'])->group(function(){
+    Route::post('/faireUnDon', [PayementController::class, 'initiatePayment']);
+Route::get('payments', [PayementController::class, 'index'])->name('payment.index');
+Route::post('/checkout', [PayementController::class, 'payment'])->name('payment.submit');
+Route::get('ipn', [PayementController::class, 'ipn'])->name('paytech-ipn');
+// Route::get('payment-success/{code}', [PayementController::class, 'success'])->name('payment.success');
+Route::get('payment/{code}/success', [PayementController::class, 'paymentSuccessView'])->name('payment.success.view');
+Route::get('payment-cancel', [PayementController::class, 'cancel'])->name('paytech.cancel');
     Route::get('/listeCollecte',[collecteDeFondsController::class,"listeCollecte"]);
     Route::put('/supprimerCompte',[UsersController::class,"supprimerCompte"]);
     Route::post('/modifierProfil',[collecteDeFondsController::class,"modifierProfil"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });
+
+Route::get('payment-success/{code}', [PayementController::class, 'success'])->name('payment.success')
+    ->middleware('guest');
+
+
 
 Route::middleware(['auth:api','fondation'])->group(function(){
     Route::post('/creerCollecte',[collecteDeFondsController::class,"store"]);
