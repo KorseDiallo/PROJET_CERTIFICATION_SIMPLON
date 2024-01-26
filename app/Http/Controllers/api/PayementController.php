@@ -109,7 +109,8 @@ public function savePayment($data = [])
     $id= DB::table('password_reset_tokens')->first();
   
     $payment = Payment::firstOrCreate([
-        'token' => $token,
+         'token' => $token,
+        // 'token' => $data['token'],
         //$randonToken= random_int(10,100),
         // dd($randonToken),
        // 'token' => $randonToken,

@@ -764,4 +764,45 @@ class collecteDeFondsController extends Controller
             ], 403);
         }
     }
+
+
+
+public function historiqueDons()
+{
+    $donateur = auth()->user();
+    $tableCollecte = [];
+
+    $dons = $donateur->dons;
+
+    // Vérifie s'il y a des dons avant de procéder
+    if ($dons->isEmpty()) {
+        return response()->json([
+            "status" => true,
+            "message" => "Vous n'avez pas un historique de dons pour le moment",
+            'data' => [],
+        ]);
+    }
+
+    foreach ($dons as $don) {
+        // Vérifie si la relation collecteDeFond est définie
+        if ($don->collecteDeFond) {
+            $tableCollecte[] = [
+                'Montant Donné' => $don->amount,
+                'Titre' => $don->collecteDeFond->titre,
+                'Description Collecte' => $don->collecteDeFond->description,
+                'Date Don Effectué' => $don->created_at->format('j/m/Y H:i:s'),
+            ];
+        }
+    }
+
+    return response()->json([
+        "status" => true,
+        "message" => "Voici l'historique de vos dons",
+        'data' => $tableCollecte,
+    ]);
+}
+
+
+
+   
 }

@@ -14,9 +14,9 @@ class Don extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function collecteDeFond(){
-        return $this->belongsTo(collecteDeFonds::class);
-    }
+    // public function collecteDeFond(){
+    //     return $this->belongsTo(collecteDeFonds::class);
+    // }
 
     
 }
