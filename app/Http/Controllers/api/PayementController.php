@@ -28,7 +28,7 @@ class PayementController extends Controller
 
     // 1 choix remplace la methode payement
 
-    public function initiatePayment(Request $request)
+    public function initiatePayment(PayementRequest $request)
     {
         // Récupérez les informations nécessaires de la requête $request
         $amount = $request->input('price');
@@ -110,6 +110,10 @@ public function savePayment($data = [])
   
     $payment = Payment::firstOrCreate([
         'token' => $token,
+        //$randonToken= random_int(10,100),
+        // dd($randonToken),
+       // 'token' => $randonToken,
+        
     ], [
         'amount' => $amount,
         'user_id' =>   $id->donateurConnecter,
@@ -123,6 +127,13 @@ public function savePayment($data = [])
             'success' => false,
             'data' => $data
         ];
+
+        // return response()->json([
+        //     "status" => false,
+        //     "message" => "Payement non effectué",
+          
+
+        // ]);
     }
 
     // Redirection vers la page de succès si le paiement est réussi
