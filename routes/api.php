@@ -45,7 +45,7 @@ Route::get('payments', [PayementController::class, 'index'])->name('payment.inde
 Route::post('/checkout', [PayementController::class, 'payment'])->name('payment.submit');
 Route::get('ipn', [PayementController::class, 'ipn'])->name('paytech-ipn');
 // Route::get('payment-success/{code}', [PayementController::class, 'success'])->name('payment.success');
-Route::get('payment/{code}/success', [PayementController::class, 'paymentSuccessView'])->name('payment.success.view');
+
 Route::get('payment-cancel', [PayementController::class, 'cancel'])->name('paytech.cancel');
     Route::get('/listeCollecte',[collecteDeFondsController::class,"listeCollecte"]);
     Route::put('/supprimerCompte',[UsersController::class,"supprimerCompte"]);
@@ -53,9 +53,9 @@ Route::get('payment-cancel', [PayementController::class, 'cancel'])->name('payte
     Route::get('/logout',[UsersController::class,"logout"]);
 });
 
-Route::get('payment-success/{code}', [PayementController::class, 'success'])->name('payment.success')
-    ->middleware('guest');
-
+Route::get('payment-success/{code}', [PayementController::class, 'success'])->name('payment.success');
+   
+Route::get('payment/{code}/success', [PayementController::class, 'paymentSuccessView'])->name('payment.success.view');
 
 
 Route::middleware(['auth:api','fondation'])->group(function(){

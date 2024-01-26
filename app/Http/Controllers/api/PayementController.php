@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Services\PaytechService;
 use App\Http\Requests\PayementRequest;
 use App\Models\Payment;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 
@@ -31,8 +33,12 @@ class PayementController extends Controller
         // Récupérez les informations nécessaires de la requête $request
         $amount = $request->input('price');
         $collecteId = $request->input('collecte_id');
-        $userId = auth()->user()->id;
-    
+        // $userId = auth()->user()->id;
+        $userexist=DB::table('password_reset_tokens')->insert([
+            'donateurConnecter' =>auth()->user()->id,
+            'token'=>1
+        ]);
+        // dd('ok');
         // Construisez l'URL de succès
         $success_url = secure_url(route('payment.success', ['code' => $collecteId, 'data' => $request->all()]));
     
@@ -67,8 +73,8 @@ class PayementController extends Controller
         if ($jsonResponse['success'] < 0) {
             return response()->json(['error' => $jsonResponse['errors'][0]], 422);
         } elseif ($jsonResponse['success'] == 1) {
-            // ligne rajouter savePayement
-            $savePaymentResponse = $this->savePayment($userId, $jsonResponse);
+            // ligne rajouter savePayementResponse
+            //$savePaymentResponse = $this->savePayment($userId, $jsonResponse);
             // Retournez les informations nécessaires pour finaliser le paiement côté client
             return response()->json(['token' => $jsonResponse['token'], 'redirect_url' => $jsonResponse['redirect_url']]);
         }
@@ -152,7 +158,7 @@ class PayementController extends Controller
         return Redirect::to(route('payment.success.view', ['code' => $code]));
     }
 
-    // remplacer la deuxime methode savePayement
+    // remplacer par la deuxime methode savePayement
 
 //     public function savePayment($data = [])
 // {
@@ -190,21 +196,25 @@ class PayementController extends Controller
 
 public function savePayment($data = [])
 {
+    
     // Récupérez les informations nécessaires du tableau $data
     $token = $data['token'];
     $amount = $data['price'];
     $collecteId = $data['collecte_id'];
     //rajout de userId
-    $userId     = $data['user_id'];
+    //$userId     = $data['user_id'];
     // Sauvegarde du paiement dans la base de données
+    $id= DB::table('password_reset_tokens')->first();
+  
     $payment = Payment::firstOrCreate([
         'token' => $token,
     ], [
         'amount' => $amount,
-        'user_id' =>  $userId,  // auth()->user()->id,
+        'user_id' =>   $id->donateurConnecter,
         'collecte_de_fond_id' => $collecteId,
     ]);
-
+    DB::table('password_reset_tokens')->delete();
+    // dd($payment);
     if (!$payment) {
         // Redirection vers la page d'accueil si le paiement n'est pas enregistré
         return [
