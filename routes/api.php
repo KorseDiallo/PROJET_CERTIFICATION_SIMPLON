@@ -63,6 +63,7 @@ Route::middleware(['auth:api','fondation'])->group(function(){
     Route::get('/listeCollecteEnCours',[collecteDeFondsController::class,"listeCollecteEnCours"]);
     Route::get('/listeCollecteCloturer',[collecteDeFondsController::class,"listeCollecteCloturer"]);
     Route::put('/supprimerCompte',[UsersController::class,"supprimerCompte"]);
+    Route::get('/listeDonateurAUnDon',[collecteDeFondsController::class,"listeDonateurAUnDon"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });
 

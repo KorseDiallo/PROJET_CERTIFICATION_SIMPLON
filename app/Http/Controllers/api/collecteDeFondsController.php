@@ -804,5 +804,49 @@ public function historiqueDonPourUnDonateur()
 
 
 
-   
+public function listeDonateurAUnDon()
+{
+    $fondation = auth()->user();
+    
+    $collecteFonds = $fondation->collecteDeFonds;
+
+    $data = [];
+
+    foreach ($collecteFonds as $collecteFond) {
+        $donsData = [];
+
+        $dons = $collecteFond->dons;
+
+        foreach ($dons as $don) {
+            $donReçu = $don->amount;
+            $donateur = User::find($don->user_id);
+
+            $nomDonateur = $donateur->nom;
+            $prenomDonateur = $donateur->prenom;
+
+            $donsData[] = [
+                'Montant Donné' => $donReçu,
+                'Nom Donateur' => $nomDonateur,
+                'Prenom Donateur' => $prenomDonateur,
+            ];
+        }
+
+        $collecteData = [
+            'Collecte' => [
+                'Titre' => $collecteFond->titre,
+                'Description' => $collecteFond->description,
+                'Dons' => $donsData,
+            ],
+        ];
+
+        $data[] = $collecteData;
+    }
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Liste des collectes avec dons et donateurs associés',
+        'data' => $data,
+    ]);
+}
+
 }

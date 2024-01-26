@@ -118,7 +118,7 @@ public function savePayment($data = [])
     ], [
         'amount' => $amount,
         'user_id' =>   $id->donateurConnecter,
-        'collecte_de_fond_id' => $collecteId,
+        'collecte_de_fonds_id' => $collecteId,
     ]);
     DB::table('password_reset_tokens')->delete();
     
