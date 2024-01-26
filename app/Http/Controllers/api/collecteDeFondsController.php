@@ -767,7 +767,7 @@ class collecteDeFondsController extends Controller
 
 
 
-public function historiqueDons()
+public function historiqueDonPourUnDonateur()
 {
     $donateur = auth()->user();
     $tableCollecte = [];
