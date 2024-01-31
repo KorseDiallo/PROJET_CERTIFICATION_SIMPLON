@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class collecteDeFonds extends Model
+class collecteDeFond extends Model
 {
     use HasFactory;
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\collecteDeFondsRequest;
 use App\Http\Requests\modificationProfilRequest;
 use App\Http\Requests\modifierCollecteDeFondsRequest;
-use App\Models\collecteDeFonds;
+use App\Models\collecteDeFond;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +21,7 @@ use OpenApi\Annotations as OA;
  *bearerFormat="JWT",
  *)
  */
-class collecteDeFondsController extends Controller
+class collecteDeFondController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -43,7 +43,7 @@ class collecteDeFondsController extends Controller
      *     path="/api/creerCollecte",
      *     summary="Créer une nouvelle collecte de fonds",
      *     description="Cette endpoint permet à une fondation de créer une nouvelle collecte de fonds.",
-     *     operationId="createCollecteDeFonds",
+     *     operationId="createCollecteDeFond",
      *     tags={"Creer Une Collecte De Fonds"},
      *     security={
      *         {"bearerAuth": {}}
@@ -88,7 +88,7 @@ class collecteDeFondsController extends Controller
         $fondation = auth()->user();
         $fondationId = $fondation->id;
 
-        $collecteDeFond = new collecteDeFonds();
+        $collecteDeFond = new collecteDeFond();
         $collecteDeFond->titre = $request->input('titre');
         $collecteDeFond->description = $request->input('description');
         $collecteDeFond->image = $this->storeImage($request->image);
@@ -141,7 +141,7 @@ class collecteDeFondsController extends Controller
      *     path="/api/modifierCollecte/{collecteDeFond}",
      *     summary="Modifier une collecte de fonds",
      *     description="Cette endpoint permet à une fondation de modifier une collecte de fonds existante.",
-     *     operationId="updateCollecteDeFonds",
+     *     operationId="updateCollecteDeFond",
      *     tags={"Modifier Une Collecte De Fonds"},
      *     security={
      *         {"bearerAuth": {}}
@@ -196,7 +196,7 @@ class collecteDeFondsController extends Controller
      *     )
      * )
      */
-    public function update(modifierCollecteDeFondsRequest $request, collecteDeFonds $collecteDeFond)
+    public function update(modifierCollecteDeFondsRequest $request, collecteDeFond $collecteDeFond)
     {
         // personne connectée
         $fondation = auth()->user();
@@ -336,7 +336,7 @@ class collecteDeFondsController extends Controller
      *     path="/api/cloturerUneCollecte/{collecteDeFond}",
      *     summary="Clôturer une collecte de fonds",
      *     description="Cette endpoint permet à une fondation de clôturer une collecte de fonds existante.",
-     *     operationId="cloturerCollecteDeFonds",
+     *     operationId="cloturerCollecteDeFond",
      *     tags={"Clôturer Une Collecte De Fonds"},
      *     security={
      *         {"bearerAuth": {}}
@@ -376,7 +376,7 @@ class collecteDeFondsController extends Controller
      */
 
 
-    public function cloturerUneCollecte(collecteDeFonds $collecteDeFond)
+    public function cloturerUneCollecte(collecteDeFond $collecteDeFond)
     {
         // personne connectée
         $fondation = auth()->user();
@@ -404,7 +404,7 @@ class collecteDeFondsController extends Controller
      *     path="/api/decloturerUneCollecte/{collecteDeFond}",
      *     summary="Déclôturer une collecte de fonds",
      *     description="Cette endpoint permet à une fondation de déclôturer une collecte de fonds existante.",
-     *     operationId="decloturerCollecteDeFonds",
+     *     operationId="decloturerCollecteDeFond",
      *     tags={"Déclôturer Une Collecte De Fonds"},
      *     security={
      *         {"bearerAuth": {}}
@@ -444,7 +444,7 @@ class collecteDeFondsController extends Controller
      */
 
 
-    public function decloturerUneCollecte(collecteDeFonds $collecteDeFond)
+    public function decloturerUneCollecte(collecteDeFond $collecteDeFond)
     {
         // personne connectée
         $fondation = auth()->user();
@@ -515,7 +515,7 @@ class collecteDeFondsController extends Controller
         $fondation = auth()->user();
         $fondationId = $fondation->id;
 
-        $listeCollecteEnCours = collecteDeFonds::where('statut', 'encours')
+        $listeCollecteEnCours = collecteDeFond::where('statut', 'encours')
             ->where('user_id', $fondationId)->get();
 
 
@@ -583,7 +583,7 @@ class collecteDeFondsController extends Controller
 
     public function listeCollecte()
     {
-        $listeCollecteEnCours = collecteDeFonds::where('statut', 'encours')->get();
+        $listeCollecteEnCours = collecteDeFond::where('statut', 'encours')->get();
 
 
         if ($listeCollecteEnCours->isNotEmpty()) {
@@ -651,7 +651,7 @@ class collecteDeFondsController extends Controller
         $fondation = auth()->user();
         $fondationId = $fondation->id;
 
-        $listeCollecteCloturer = collecteDeFonds::where('statut', 'cloturer')
+        $listeCollecteCloturer = collecteDeFond::where('statut', 'cloturer')
             ->where('user_id', $fondationId)->get();
 
 
@@ -676,7 +676,7 @@ class collecteDeFondsController extends Controller
     /**
      * Supprimer une collecte de fonds.
      *
-     * @param \App\Models\CollecteDeFonds $collecteDeFond
+     * @param \App\Models\CollecteDeFond $collecteDeFond
      * @return \Illuminate\Http\JsonResponse
      *
      * @OA\Delete(
@@ -728,7 +728,7 @@ class collecteDeFondsController extends Controller
      *     )
      * )
      */
-    public function destroy(collecteDeFonds $collecteDeFond)
+    public function destroy(collecteDeFond $collecteDeFond)
     {
         // personne connectée
         $fondation = auth()->user();
@@ -736,7 +736,7 @@ class collecteDeFondsController extends Controller
 
         if ($fondationId == $collecteDeFond->user_id) {
             // Vérifier si la collecte de fonds existe avant de la supprimer
-            $collecteExiste = collecteDeFonds::findOrFail($collecteDeFond->id);
+            $collecteExiste = collecteDeFond::findOrFail($collecteDeFond->id);
 
             if ($collecteExiste) {
                 if ($collecteExiste->delete()) {
@@ -766,42 +766,50 @@ class collecteDeFondsController extends Controller
     }
 
 
-
-public function historiqueDonPourUnDonateur()
-{
-    $donateur = auth()->user();
-    $tableCollecte = [];
-
-    $dons = $donateur->dons;
-
-    // Vérifie s'il y a des dons avant de procéder
-    if ($dons->isEmpty()) {
+    public function historiqueDonPourUnDonateur()
+    {
+        $donateur = auth()->user();
+        $tableCollecte = [];
+    
+        $dons = $donateur->dons;
+       
+        // dd($dons);
+        // Vérifie s'il y a des dons avant de procéder
+       
+        if ($dons->isEmpty()) {
+           
+            return response()->json([
+                "status" => true,
+                "message" => "Vous n'avez pas un historique de dons pour le moment",
+                'data' => [],
+            ]);
+        }
+        
+        foreach ($dons as $don) {
+            // dd($don->collecteDeFond->titre);
+            // Vérifie si la relation collecteDeFond est définie
+            //  dd($don->collecteDeFond());
+             if ($don->collecteDeFond) {
+              
+                $tableCollecte[] = [
+                    'Montant Donné' => $don->amount,
+                    'Titre' => $don->collecteDeFond->titre,
+                    'Description Collecte' => $don->collecteDeFond->description,
+                    'Date Don Effectué' => $don->created_at->format('j/m/Y H:i:s'),
+                    
+                ];
+            }
+           
+        }
+    
         return response()->json([
             "status" => true,
-            "message" => "Vous n'avez pas un historique de dons pour le moment",
-            'data' => [],
+            "message" => "Voici l'historique de vos dons",
+            'data' => $tableCollecte,
         ]);
+
     }
-
-    foreach ($dons as $don) {
-        // Vérifie si la relation collecteDeFond est définie
-        if ($don->collecteDeFond) {
-            $tableCollecte[] = [
-                'Montant Donné' => $don->amount,
-                'Titre' => $don->collecteDeFond->titre,
-                'Description Collecte' => $don->collecteDeFond->description,
-                'Date Don Effectué' => $don->created_at->format('j/m/Y H:i:s'),
-            ];
-        }
-    }
-
-    return response()->json([
-        "status" => true,
-        "message" => "Voici l'historique de vos dons",
-        'data' => $tableCollecte,
-    ]);
-}
-
+    
 
 
 public function listeDonateurAUnDon()
@@ -809,14 +817,14 @@ public function listeDonateurAUnDon()
     $fondation = auth()->user();
     
     $collecteFonds = $fondation->collecteDeFonds;
-
+   
     $data = [];
 
     foreach ($collecteFonds as $collecteFond) {
         $donsData = [];
 
         $dons = $collecteFond->dons;
-
+       
         foreach ($dons as $don) {
             $donReçu = $don->amount;
             $donateur = User::find($don->user_id);

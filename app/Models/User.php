@@ -65,7 +65,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function collecteDeFonds(){
-        return $this->hasMany(collecteDeFonds::class);
+        return $this->hasMany(collecteDeFond::class);
     }
 
     public function dons(){

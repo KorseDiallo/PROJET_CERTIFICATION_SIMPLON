@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\api\collecteDeFondsController;
+use App\Http\Controllers\api\collecteDeFondController;
 use App\Http\Controllers\api\PayementController;
 use App\Http\Controllers\api\UsersController;
 use Illuminate\Http\Request;
@@ -42,10 +42,10 @@ Route::middleware(['auth:api','donateur'])->group(function(){
     Route::get('ipn', [PayementController::class, 'ipn'])->name('paytech-ipn');
     Route::get('payment-cancel', [PayementController::class, 'cancel'])->name('paytech.cancel');
     //fin route de l'api paytech
-    Route::get('/listeCollecte',[collecteDeFondsController::class,"listeCollecte"]);
+    Route::get('/listeCollecte',[collecteDeFondController::class,"listeCollecte"]);
     Route::put('/supprimerCompte',[UsersController::class,"supprimerCompte"]);
-    Route::post('/modifierProfil',[collecteDeFondsController::class,"modifierProfil"]);
-    Route::get('/historiqueDons',[collecteDeFondsController::class,"historiqueDonPourUnDonateur"]);
+    Route::post('/modifierProfil',[collecteDeFondController::class,"modifierProfil"]);
+    Route::get('/historiqueDons',[collecteDeFondController::class,"historiqueDonPourUnDonateur"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });
     //les deux sortie de l'api paytech sorti du middleware
@@ -54,16 +54,16 @@ Route::middleware(['auth:api','donateur'])->group(function(){
 
 
 Route::middleware(['auth:api','fondation'])->group(function(){
-    Route::post('/creerCollecte',[collecteDeFondsController::class,"store"]);
-    Route::post('/modifierCollecte/{collecteDeFond}',[collecteDeFondsController::class,"update"]);
-    Route::delete('/supprimerCollecte/{collecteDeFond}',[collecteDeFondsController::class,"destroy"]);
-    Route::post('/modifierProfil',[collecteDeFondsController::class,"modifierProfil"]);
-    Route::put('/cloturerUneCollecte/{collecteDeFond}',[collecteDeFondsController::class,"cloturerUneCollecte"]);
-    Route::put('/decloturerUneCollecte/{collecteDeFond}',[collecteDeFondsController::class,"decloturerUneCollecte"]);
-    Route::get('/listeCollecteEnCours',[collecteDeFondsController::class,"listeCollecteEnCours"]);
-    Route::get('/listeCollecteCloturer',[collecteDeFondsController::class,"listeCollecteCloturer"]);
+    Route::post('/creerCollecte',[collecteDeFondController::class,"store"]);
+    Route::post('/modifierCollecte/{collecteDeFond}',[collecteDeFondController::class,"update"]);
+    Route::delete('/supprimerCollecte/{collecteDeFond}',[collecteDeFondController::class,"destroy"]);
+    Route::post('/modifierProfil',[collecteDeFondController::class,"modifierProfil"]);
+    Route::put('/cloturerUneCollecte/{collecteDeFond}',[collecteDeFondController::class,"cloturerUneCollecte"]);
+    Route::put('/decloturerUneCollecte/{collecteDeFond}',[collecteDeFondController::class,"decloturerUneCollecte"]);
+    Route::get('/listeCollecteEnCours',[collecteDeFondController::class,"listeCollecteEnCours"]);
+    Route::get('/listeCollecteCloturer',[collecteDeFondController::class,"listeCollecteCloturer"]);
     Route::put('/supprimerCompte',[UsersController::class,"supprimerCompte"]);
-    Route::get('/listeDonateurAUnDon',[collecteDeFondsController::class,"listeDonateurAUnDon"]);
+    Route::get('/listeDonateurAUnDon',[collecteDeFondController::class,"listeDonateurAUnDon"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });
 

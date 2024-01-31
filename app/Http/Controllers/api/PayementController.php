@@ -42,7 +42,7 @@ class PayementController extends Controller
 
  /**
  * @OA\Post(
- *      path="/faireUnDon",
+ *      path="/api/faireUnDon",
  *      operationId="faireUnDon",
  *      tags={"Faire Un Don "},
  *      summary="Initie un paiement et gère le succès du paiement",
@@ -179,7 +179,7 @@ public function savePayment($data = [])
     ], [
         'amount' => $amount,
         'user_id' =>   $id->donateurConnecter,
-        'collecte_de_fonds_id' => $collecteId,
+        'collecte_de_fond_id' => $collecteId,
     ]);
     
     DB::table('password_reset_tokens')->delete();

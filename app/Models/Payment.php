@@ -19,7 +19,7 @@ class Payment extends Model
         'token',
         'amount',
         'user_id',
-        'collecte_de_fonds_id',
+        'collecte_de_fond_id',
     ];
 
     protected $table = 'payments';
@@ -30,7 +30,7 @@ class Payment extends Model
     }
 
     public function collecteDeFond(){
-        return $this->belongsTo(collecteDeFonds::class);
+        return $this->belongsTo(collecteDeFond::class);
     }
 
 

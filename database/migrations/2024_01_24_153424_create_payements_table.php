@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\collecteDeFond;
+use App\Models\collecteDeFonds;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,7 +19,8 @@ return new class extends Migration
             $table->string('token')->nullable();
             $table->integer('amount');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('collecte_de_fonds_id')->constrained()->onDelete('cascade');
+            // $table->foreignId('collecte_de_fond_id')->constrained()->onDelete('cascade');
+            $table->foreignIdFor(collecteDeFond::class)->constrained()->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
     

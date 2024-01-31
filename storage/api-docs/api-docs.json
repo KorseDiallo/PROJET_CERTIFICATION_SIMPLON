@@ -6,7 +6,7 @@
         "version": "0.1"
     },
     "paths": {
-        "/faireUnDon": {
+        "/api/faireUnDon": {
             "post": {
                 "tags": [
                     "Faire Un Don "
