@@ -51,26 +51,11 @@ class PayementController extends Controller
  *      @OA\RequestBody(
  *          required=true,
  *          @OA\JsonContent(
- *              @OA\Property(property="property1", type="string"),
- *              @OA\Property(property="property2", type="integer"),
  *              @OA\Property(property="price", type="integer"),
  *              @OA\Property(property="collecte_id", type="integer"),
  *          )
  *      ),
- *      @OA\Parameter(
- *         name="price",
- *         in="path",
- *         required=true,
- *         description="Montant du don",
- *         @OA\Schema(type="integer")
- *      ),
- *      @OA\Parameter(
- *         name="collecte_id",
- *         in="path",
- *         required=true,
- *         description="ID de la collecte de fonds",
- *         @OA\Schema(type="integer")
- *      ),
+ *     
  *      @OA\Response(
  *          response=200,
  *          description="Succès de l'initialisation du paiement ou redirection vers la page de succès",

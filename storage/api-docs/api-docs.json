@@ -14,38 +14,12 @@
                 "summary": "Initie un paiement et gère le succès du paiement",
                 "description": "Initie un paiement avec PayTech et gère le succès du paiement",
                 "operationId": "faireUnDon",
-                "parameters": [
-                    {
-                        "name": "price",
-                        "in": "path",
-                        "description": "Montant du don",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "collecte_id",
-                        "in": "path",
-                        "description": "ID de la collecte de fonds",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "property1": {
-                                        "type": "string"
-                                    },
-                                    "property2": {
-                                        "type": "integer"
-                                    },
                                     "price": {
                                         "type": "integer"
                                     },
@@ -852,7 +826,7 @@
                 ],
                 "summary": "Créer une nouvelle collecte de fonds",
                 "description": "Cette endpoint permet à une fondation de créer une nouvelle collecte de fonds.",
-                "operationId": "createCollecteDeFonds",
+                "operationId": "createCollecteDeFond",
                 "requestBody": {
                     "description": "Données de la collecte de fonds à créer",
                     "required": true,
@@ -945,7 +919,7 @@
                 ],
                 "summary": "Modifier une collecte de fonds",
                 "description": "Cette endpoint permet à une fondation de modifier une collecte de fonds existante.",
-                "operationId": "updateCollecteDeFonds",
+                "operationId": "updateCollecteDeFond",
                 "parameters": [
                     {
                         "name": "collecteDeFond",
@@ -1212,7 +1186,7 @@
                 ],
                 "summary": "Clôturer une collecte de fonds",
                 "description": "Cette endpoint permet à une fondation de clôturer une collecte de fonds existante.",
-                "operationId": "cloturerCollecteDeFonds",
+                "operationId": "cloturerCollecteDeFond",
                 "parameters": [
                     {
                         "name": "collecteDeFond",
@@ -1300,7 +1274,7 @@
                 ],
                 "summary": "Déclôturer une collecte de fonds",
                 "description": "Cette endpoint permet à une fondation de déclôturer une collecte de fonds existante.",
-                "operationId": "decloturerCollecteDeFonds",
+                "operationId": "decloturerCollecteDeFond",
                 "parameters": [
                     {
                         "name": "collecteDeFond",
@@ -1388,7 +1362,7 @@
                 ],
                 "summary": "Liste de toutes les collectes de fonds en cours pour la personne connectée",
                 "description": "Récupérer la liste de toutes les collectes de fonds clôturées pour la personne connectée.",
-                "operationId": "53ba119322b79133b2a9d582a04bf87c",
+                "operationId": "5a7bfafbda3dc6aa9a84f30c6e11c959",
                 "responses": {
                     "200": {
                         "description": "Liste des collectes de fonds en cours",
@@ -1465,7 +1439,7 @@
                 ],
                 "summary": "Liste de toutes les collectes de fonds en cours ",
                 "description": "Récupérer la liste de toutes les collectes de fonds clôturées pour la personne connectée.",
-                "operationId": "1ad9db98699cc8cb8e74aa4eb63691ea",
+                "operationId": "bc48f7c8a5a379d832f08ecadc6e3092",
                 "responses": {
                     "200": {
                         "description": "Liste des collectes de fonds en cours",
@@ -1542,7 +1516,7 @@
                 ],
                 "summary": "Liste de toutes les collectes de fonds clôturées pour la personne connectée",
                 "description": "Récupérer la liste de toutes les collectes de fonds clôturées pour la personne connectée.",
-                "operationId": "230e401da1f6629dd49de2eefdf7f3db",
+                "operationId": "aae61389934fc69074866d754fc97a6f",
                 "responses": {
                     "200": {
                         "description": "Liste des collectes de fonds clôturées",
@@ -1619,7 +1593,7 @@
                 ],
                 "summary": "Supprimer une collecte de fonds",
                 "description": "Supprimer une collecte de fonds.",
-                "operationId": "5259824514f74ab11516b0f817d5dd56",
+                "operationId": "0f1d06fc32bfa1df09bd0d16a9e6cc9b",
                 "parameters": [
                     {
                         "name": "collecteDeFond",
