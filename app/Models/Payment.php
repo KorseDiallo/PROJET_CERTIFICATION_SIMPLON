@@ -19,7 +19,7 @@ class Payment extends Model
         'token',
         'amount',
         'user_id',
-        'collecte_de_fond_id',
+        'collecte_de_fonds_id',
     ];
 
     protected $table = 'payments';

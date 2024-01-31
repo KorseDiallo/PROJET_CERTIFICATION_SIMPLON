@@ -6,6 +6,104 @@
         "version": "0.1"
     },
     "paths": {
+        "/faireUnDon": {
+            "post": {
+                "tags": [
+                    "Faire Un Don "
+                ],
+                "summary": "Initie un paiement et gère le succès du paiement",
+                "description": "Initie un paiement avec PayTech et gère le succès du paiement",
+                "operationId": "faireUnDon",
+                "parameters": [
+                    {
+                        "name": "price",
+                        "in": "path",
+                        "description": "Montant du don",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "collecte_id",
+                        "in": "path",
+                        "description": "ID de la collecte de fonds",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "property1": {
+                                        "type": "string"
+                                    },
+                                    "property2": {
+                                        "type": "integer"
+                                    },
+                                    "price": {
+                                        "type": "integer"
+                                    },
+                                    "collecte_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succès de l'initialisation du paiement ou redirection vers la page de succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string"
+                                        },
+                                        "redirect_url": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur lors de l'initialisation du paiement",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/register": {
             "post": {
                 "tags": [
@@ -1628,6 +1726,11 @@
     },
     "components": {
         "securitySchemes": {
+            "bearerAuthss": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            },
             "bearerAuth": {
                 "type": "http",
                 "bearerFormat": "JWT",

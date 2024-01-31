@@ -11,6 +11,18 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use OpenApi\Annotations as OA;
+use Illuminate\Support\Str;
+
+
+/**
+ *@OA\SecurityScheme(
+ *securityScheme="bearerAuthss",
+ *type="http",
+ *scheme="bearer",
+ *bearerFormat="JWT",
+ *)
+ */
 
 
 class PayementController extends Controller
@@ -27,6 +39,58 @@ class PayementController extends Controller
     }
 
     // 1 choix remplace la methode payement
+
+ /**
+ * @OA\Post(
+ *      path="/faireUnDon",
+ *      operationId="faireUnDon",
+ *      tags={"Faire Un Don "},
+ *      summary="Initie un paiement et gère le succès du paiement",
+ *      description="Initie un paiement avec PayTech et gère le succès du paiement",
+ *      security={{"bearerAuth":{}}},
+ *      @OA\RequestBody(
+ *          required=true,
+ *          @OA\JsonContent(
+ *              @OA\Property(property="property1", type="string"),
+ *              @OA\Property(property="property2", type="integer"),
+ *              @OA\Property(property="price", type="integer"),
+ *              @OA\Property(property="collecte_id", type="integer"),
+ *          )
+ *      ),
+ *      @OA\Parameter(
+ *         name="price",
+ *         in="path",
+ *         required=true,
+ *         description="Montant du don",
+ *         @OA\Schema(type="integer")
+ *      ),
+ *      @OA\Parameter(
+ *         name="collecte_id",
+ *         in="path",
+ *         required=true,
+ *         description="ID de la collecte de fonds",
+ *         @OA\Schema(type="integer")
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Succès de l'initialisation du paiement ou redirection vers la page de succès",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="token", type="string"),
+ *              @OA\Property(property="redirect_url", type="string"),
+ *              @OA\Property(property="message", type="string", example="success")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=422,
+ *          description="Erreur lors de l'initialisation du paiement",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="error", type="string")
+ *          )
+ *      )
+ * )
+ */
+
+
 
     public function initiatePayment(PayementRequest $request)
     {
@@ -82,7 +146,8 @@ class PayementController extends Controller
     public function success(Request $request, $code)
     {
         $validated = $_GET['data'];
-        $validated['token'] = session('token') ?? '';
+        // $validated['token'] = session('token') ?? '';
+        $validated['token'] = Str::random(156);
 
         // Call the save methods to save data to database using the Payment model
 
@@ -107,19 +172,16 @@ public function savePayment($data = [])
     $collecteId = $data['collecte_id'];
 
     $id= DB::table('password_reset_tokens')->first();
-  
+   
     $payment = Payment::firstOrCreate([
          'token' => $token,
-        // 'token' => $data['token'],
-        //$randonToken= random_int(10,100),
-        // dd($randonToken),
-       // 'token' => $randonToken,
         
     ], [
         'amount' => $amount,
         'user_id' =>   $id->donateurConnecter,
         'collecte_de_fonds_id' => $collecteId,
     ]);
+    
     DB::table('password_reset_tokens')->delete();
     
     if (!$payment) {
@@ -129,12 +191,6 @@ public function savePayment($data = [])
             'data' => $data
         ];
 
-        // return response()->json([
-        //     "status" => false,
-        //     "message" => "Payement non effectué",
-          
-
-        // ]);
     }
 
     // Redirection vers la page de succès si le paiement est réussi
