@@ -1847,6 +1847,197 @@
                     }
                 ]
             }
+        },
+        "/api/listeDonateurADesDons": {
+            "get": {
+                "tags": [
+                    "Liste des collectes de fonds pour une fondation et les dons associés à ses collectes"
+                ],
+                "summary": "Liste des collectes avec les donateurs associés",
+                "operationId": "listeDonateurADesDons",
+                "responses": {
+                    "200": {
+                        "description": "Liste des collectes avec donateurs récupérée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Liste Collectes De Fonds avec les donateurs associés"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "Collecte": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "Titre": {
+                                                                    "type": "string",
+                                                                    "example": "Titre de la collecte"
+                                                                },
+                                                                "Description": {
+                                                                    "type": "string",
+                                                                    "example": "Description de la collecte"
+                                                                },
+                                                                "Dons": {
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "properties": {
+                                                                            "Montant Donné": {
+                                                                                "type": "number",
+                                                                                "example": 100
+                                                                            },
+                                                                            "Nom Donateur": {
+                                                                                "type": "string",
+                                                                                "example": "Nom du donateur"
+                                                                            },
+                                                                            "Prénom Donateur": {
+                                                                                "type": "string",
+                                                                                "example": "Prénom du donateur"
+                                                                            },
+                                                                            "Téléphone Donateur": {
+                                                                                "type": "string",
+                                                                                "example": "123-456-789"
+                                                                            }
+                                                                        },
+                                                                        "type": "object"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé. Jeton manquant ou invalide."
+                    },
+                    "404": {
+                        "description": "Aucune collecte avec dons trouvée."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/listeDonateurAUnDon/{collecteId}": {
+            "get": {
+                "tags": [
+                    "Liste d'une collecte de fond pour une fondation et les dons associés à cette collecte"
+                ],
+                "summary": "Liste des dons et donateurs associés à une collecte de fonds spécifiée",
+                "operationId": "listeDonateurAUnDon",
+                "parameters": [
+                    {
+                        "name": "collecteId",
+                        "in": "path",
+                        "description": "ID de la collecte de fonds",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des dons et donateurs associés récupérée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Liste des dons et donateurs associés à la collecte de fonds spécifiée"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "Collecte": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "Titre": {
+                                                                    "type": "string",
+                                                                    "example": "Titre de la collecte"
+                                                                },
+                                                                "Description": {
+                                                                    "type": "string",
+                                                                    "example": "Description de la collecte"
+                                                                },
+                                                                "Dons": {
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "properties": {
+                                                                            "Montant Donné": {
+                                                                                "type": "number",
+                                                                                "example": 100
+                                                                            },
+                                                                            "Nom Donateur": {
+                                                                                "type": "string",
+                                                                                "example": "Nom du donateur"
+                                                                            },
+                                                                            "Prénom Donateur": {
+                                                                                "type": "string",
+                                                                                "example": "Prénom du donateur"
+                                                                            },
+                                                                            "Téléphone Donateur": {
+                                                                                "type": "string",
+                                                                                "example": "123-456-789"
+                                                                            }
+                                                                        },
+                                                                        "type": "object"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé. Jeton manquant ou invalide."
+                    },
+                    "404": {
+                        "description": "La collecte de fonds spécifiée n'existe pas pour cette fondation."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {

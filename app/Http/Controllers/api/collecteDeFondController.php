@@ -918,6 +918,49 @@ class collecteDeFondController extends Controller
     }
     
 
+    /**
+ * @OA\Get(
+ *     path="/api/listeDonateurADesDons",
+ *     summary="Liste des collectes avec les donateurs associés",
+ *     operationId="listeDonateurADesDons",
+ *     tags={"Liste des collectes de fonds pour une fondation et les dons associés à ses collectes"},
+ *     security={{"bearerAuth": {}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Liste des collectes avec donateurs récupérée avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Liste Collectes De Fonds avec les donateurs associés"),
+ *             @OA\Property(property="data", type="array",
+ *                 @OA\Items(
+ *                     @OA\Property(property="Collecte", type="array",
+ *                         @OA\Items(
+ *                             @OA\Property(property="Titre", type="string", example="Titre de la collecte"),
+ *                             @OA\Property(property="Description", type="string", example="Description de la collecte"),
+ *                             @OA\Property(property="Dons", type="array",
+ *                                 @OA\Items(
+ *                                     @OA\Property(property="Montant Donné", type="number", example=100),
+ *                                     @OA\Property(property="Nom Donateur", type="string", example="Nom du donateur"),
+ *                                     @OA\Property(property="Prénom Donateur", type="string", example="Prénom du donateur"),
+ *                                     @OA\Property(property="Téléphone Donateur", type="string", example="123-456-789"),
+ *                                 )
+ *                             ),
+ *                         )
+ *                     ),
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Non autorisé. Jeton manquant ou invalide."
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Aucune collecte avec dons trouvée."
+ *     )
+ * )
+ */
 
 public function listeDonateurADesDons()
 {
@@ -983,7 +1026,56 @@ public function listeDonateurADesDons()
     ]);
 }
 
-
+/**
+ * @OA\Get(
+ *     path="/api/listeDonateurAUnDon/{collecteId}",
+ *     summary="Liste des dons et donateurs associés à une collecte de fonds spécifiée",
+ *     operationId="listeDonateurAUnDon",
+ *     tags={"Liste d'une collecte de fond pour une fondation et les dons associés à cette collecte"},
+ *     security={{"bearerAuth": {}}},
+ *     @OA\Parameter(
+ *         name="collecteId",
+ *         in="path",
+ *         required=true,
+ *         description="ID de la collecte de fonds",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Liste des dons et donateurs associés récupérée avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Liste des dons et donateurs associés à la collecte de fonds spécifiée"),
+ *             @OA\Property(property="data", type="array",
+ *                 @OA\Items(
+ *                     @OA\Property(property="Collecte", type="array",
+ *                         @OA\Items(
+ *                             @OA\Property(property="Titre", type="string", example="Titre de la collecte"),
+ *                             @OA\Property(property="Description", type="string", example="Description de la collecte"),
+ *                             @OA\Property(property="Dons", type="array",
+ *                                 @OA\Items(
+ *                                     @OA\Property(property="Montant Donné", type="number", example=100),
+ *                                     @OA\Property(property="Nom Donateur", type="string", example="Nom du donateur"),
+ *                                     @OA\Property(property="Prénom Donateur", type="string", example="Prénom du donateur"),
+ *                                     @OA\Property(property="Téléphone Donateur", type="string", example="123-456-789"),
+ *                                 )
+ *                             ),
+ *                         )
+ *                     ),
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Non autorisé. Jeton manquant ou invalide."
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="La collecte de fonds spécifiée n'existe pas pour cette fondation."
+ *     )
+ * )
+ */
 
 public function listeDonateurAUnDon($collecteId)
 {
