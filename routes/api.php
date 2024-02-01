@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\abonnementController;
 use App\Http\Controllers\api\collecteDeFondController;
 use App\Http\Controllers\api\PayementController;
 use App\Http\Controllers\api\UsersController;
@@ -49,6 +50,8 @@ Route::middleware(['auth:api','donateur'])->group(function(){
     Route::post('/modifierProfil',[collecteDeFondController::class,"modifierProfil"]);
     Route::get('/historiqueDons',[collecteDeFondController::class,"historiqueDesDonsPourUnDonateur"]);
     Route::get('/historiqueDon/{donId}',[collecteDeFondController::class,"historiqueDonPourUnDonateur"]);
+    Route::post('/sabonner/{fondationId}',[abonnementController::class,"sabonner"]);
+    Route::post('/sedesabonner/{fondationId}',[abonnementController::class,"sedesabonner"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });
     //les deux sortie de l'api paytech sorti du middleware
