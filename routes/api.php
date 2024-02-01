@@ -71,6 +71,8 @@ Route::middleware(['auth:api','fondation'])->group(function(){
     Route::put('/supprimerCompte',[UsersController::class,"supprimerCompte"]);
     Route::get('/listeDonateurADesDons',[collecteDeFondController::class,"listeDonateurADesDons"]);
     Route::get('/listeDonateurAUnDon/{collecteId}',[collecteDeFondController::class,"listeDonateurAUnDon"]);
+    Route::get('/listeAbonner',[abonnementController::class,"listeAbonnerAUneFondation"]);
+
     Route::get('/logout',[UsersController::class,"logout"]);
 });
 

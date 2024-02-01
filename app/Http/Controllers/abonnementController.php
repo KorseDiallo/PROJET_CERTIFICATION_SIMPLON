@@ -87,5 +87,25 @@ class abonnementController extends Controller
     ]);
 }
 
+public function listeAbonnerAUneFondation(){
+    $fondation= auth()->user();
+    $abonnements= abonnement::where('fondation_id',$fondation->id)->get();
+   
+    $data=[];
+    foreach ($abonnements as $abonnement) {
+        $data[]=[
+            'nom_donateur'=>$abonnement->donateur->nom,
+            'prenom_donateur'=>$abonnement->donateur->prenom,
+            'telephone_donateur'=>$abonnement->donateur->telephone,
+        ];
+    }
+
+    return response()->json([
+        "status" => true,
+        "message" => "Voici la liste des Abonnée",
+        'data' => $data,
+    ]);
+}
+
 
 }
