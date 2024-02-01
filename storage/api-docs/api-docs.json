@@ -1696,6 +1696,157 @@
                     }
                 ]
             }
+        },
+        "/api/historiqueDons": {
+            "get": {
+                "tags": [
+                    "Historique des dons pour un donateur"
+                ],
+                "summary": "Historique des dons pour un donateur",
+                "operationId": "historiqueDesDonsPourUnDonateur",
+                "responses": {
+                    "200": {
+                        "description": "Historique des dons récupéré avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Voici l'historique de vos dons"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "Montant Donné": {
+                                                        "type": "number",
+                                                        "example": 100
+                                                    },
+                                                    "Titre": {
+                                                        "type": "string",
+                                                        "example": "Titre de la collecte"
+                                                    },
+                                                    "Description Collecte": {
+                                                        "type": "string",
+                                                        "example": "Description de la collecte"
+                                                    },
+                                                    "Date Don Effectué": {
+                                                        "type": "string",
+                                                        "format": "datetime",
+                                                        "example": "2024-02-01 12:34:56"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé. Jeton manquant ou invalide."
+                    },
+                    "403": {
+                        "description": "Accès interdit. Utilisateur non autorisé."
+                    },
+                    "404": {
+                        "description": "Aucun historique de dons trouvé."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/historiqueDon/{donId}": {
+            "get": {
+                "tags": [
+                    "Historique d'un don pour un donateur"
+                ],
+                "summary": "Historique d'un don pour un donateur",
+                "operationId": "historiqueDonPourUnDonateur",
+                "parameters": [
+                    {
+                        "name": "donId",
+                        "in": "path",
+                        "description": "ID du don",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Historique du don récupéré avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Voici l'historique du don spécifié"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "Montant Donné": {
+                                                        "type": "number",
+                                                        "example": 100
+                                                    },
+                                                    "Titre": {
+                                                        "type": "string",
+                                                        "example": "Titre de la collecte"
+                                                    },
+                                                    "Description Collecte": {
+                                                        "type": "string",
+                                                        "example": "Description de la collecte"
+                                                    },
+                                                    "Date Don Effectué": {
+                                                        "type": "string",
+                                                        "format": "datetime",
+                                                        "example": "2024-02-01 12:34:56"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé. Jeton manquant ou invalide."
+                    },
+                    "403": {
+                        "description": "Accès interdit. Donateur non autorisé pour ce don."
+                    },
+                    "404": {
+                        "description": "Le don spécifié n'existe pas ou ne vous appartient pas."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
