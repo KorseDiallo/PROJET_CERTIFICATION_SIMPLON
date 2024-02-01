@@ -20,11 +20,24 @@ class abonnementController extends Controller
             ->where('fondation_id', $fondationId)
             ->first();
 
-        if ($abonnementExist) {
+        // if ($abonnementExist) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'Vous êtes déjà abonné à cette fondation.',
+        //     ], 400);
+        // }
+
+        if ($abonnementExist && $abonnementExist->suivre == true) {
             return response()->json([
                 'status' => false,
                 'message' => 'Vous êtes déjà abonné à cette fondation.',
-            ], 400);
+            ]);
+        }else if($abonnementExist && $abonnementExist->suivre == false){
+            $abonnementExist->update(['suivre' => true]);
+            return response()->json([
+                'status' => false,
+                'message' => 'Vous êtes réabonné',
+            ]);
         }
 
 
