@@ -15,6 +15,7 @@ class DonateurMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+      
         if(auth()->check() && auth()->user()->role==='donateur'){
             return $next($request);
         }

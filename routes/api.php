@@ -30,6 +30,8 @@ Route::middleware(['auth:api','admin'])->group(function(){
     Route::delete('/supprimer/{user}',[UsersController::class,"destroy"]);
     Route::get('/listeDonateur',[UsersController::class,"listeDonateur"]);
     Route::get('/listeFondation',[UsersController::class,"listeFondation"]);
+    Route::get('/voirHistoriqueDon',[UsersController::class,"historiqueDesDonsPourUnDonateur"]);
+    Route::get('/voirListeDonateurADesDons',[UsersController::class,"listeDonateurADesDons"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });
     
@@ -45,7 +47,8 @@ Route::middleware(['auth:api','donateur'])->group(function(){
     Route::get('/listeCollecte',[collecteDeFondController::class,"listeCollecte"]);
     Route::put('/supprimerCompte',[UsersController::class,"supprimerCompte"]);
     Route::post('/modifierProfil',[collecteDeFondController::class,"modifierProfil"]);
-    Route::get('/historiqueDons',[collecteDeFondController::class,"historiqueDonPourUnDonateur"]);
+    Route::get('/historiqueDons',[collecteDeFondController::class,"historiqueDesDonsPourUnDonateur"]);
+    Route::get('/historiqueDon/{donId}',[collecteDeFondController::class,"historiqueDonPourUnDonateur"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });
     //les deux sortie de l'api paytech sorti du middleware
@@ -63,7 +66,8 @@ Route::middleware(['auth:api','fondation'])->group(function(){
     Route::get('/listeCollecteEnCours',[collecteDeFondController::class,"listeCollecteEnCours"]);
     Route::get('/listeCollecteCloturer',[collecteDeFondController::class,"listeCollecteCloturer"]);
     Route::put('/supprimerCompte',[UsersController::class,"supprimerCompte"]);
-    Route::get('/listeDonateurAUnDon',[collecteDeFondController::class,"listeDonateurAUnDon"]);
+    Route::get('/listeDonateurADesDons',[collecteDeFondController::class,"listeDonateurADesDons"]);
+    Route::get('/listeDonateurAUnDon/{collecteId}',[collecteDeFondController::class,"listeDonateurAUnDon"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });
 

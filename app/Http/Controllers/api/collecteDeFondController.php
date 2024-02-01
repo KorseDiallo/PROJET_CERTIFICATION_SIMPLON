@@ -766,15 +766,12 @@ class collecteDeFondController extends Controller
     }
 
 
-    public function historiqueDonPourUnDonateur()
+    public function historiqueDesDonsPourUnDonateur()
     {
         $donateur = auth()->user();
         $tableCollecte = [];
     
         $dons = $donateur->dons;
-       
-        // dd($dons);
-        // Vérifie s'il y a des dons avant de procéder
        
         if ($dons->isEmpty()) {
            
@@ -786,9 +783,6 @@ class collecteDeFondController extends Controller
         }
         
         foreach ($dons as $don) {
-            // dd($don->collecteDeFond->titre);
-            // Vérifie si la relation collecteDeFond est définie
-            //  dd($don->collecteDeFond());
              if ($don->collecteDeFond) {
               
                 $tableCollecte[] = [
@@ -811,8 +805,39 @@ class collecteDeFondController extends Controller
     }
     
 
+    public function historiqueDonPourUnDonateur($donId)
+    {
+        $donateur = auth()->user();
+        $tableCollecte = [];
+        
+       
+        $don = $donateur->dons->find($donId);
+    
+        if (!$don) {
+            return response()->json([
+                "status" => true,
+                "message" => "Le don spécifié n'existe pas ou ne vous appartient pas",
+                'data' => [],
+            ]);
+        }
+    
+        $tableCollecte[] = [
+            'Montant Donné' => $don->amount,
+            'Titre' => $don->collecteDeFond->titre,
+            'Description Collecte' => $don->collecteDeFond->description,
+            'Date Don Effectué' => $don->created_at->format('j/m/Y H:i:s'),
+        ];
+    
+        return response()->json([
+            "status" => true,
+            "message" => "Voici l'historique du don spécifié",
+            'data' => $tableCollecte,
+        ]);
+    }
+    
 
-public function listeDonateurAUnDon()
+
+public function listeDonateurADesDons()
 {
     $fondation = auth()->user();
     
@@ -820,22 +845,103 @@ public function listeDonateurAUnDon()
    
     $data = [];
 
+    if ($collecteFonds->isEmpty()) {
+        return response()->json([
+            'status' => true,
+            'message' => 'Aucune collecte avec dons trouvée',
+            'data' => [],
+        ]);
+    }
+
     foreach ($collecteFonds as $collecteFond) {
         $donsData = [];
 
         $dons = $collecteFond->dons;
-       
+
+        if ($dons->isEmpty()) {
+            $data[] = [
+                'Collecte' => [
+                    'Titre' => $collecteFond->titre,
+                    'Description' => $collecteFond->description,
+                    'Dons' => 'Aucun don associé à cette collecte pour le moment',
+                ],
+            ];
+        } else {
+            foreach ($dons as $don) {
+                $donReçu = $don->amount;
+                $donateur = User::find($don->user_id);
+
+                $nomDonateur = $donateur->nom;
+                $prenomDonateur = $donateur->prenom;
+                $telephoneDonateur = $donateur->telephone;
+                $donsData[] = [
+                    'Montant Donné' => $donReçu,
+                    'Nom Donateur' => $nomDonateur,
+                    'Prénom Donateur' => $prenomDonateur,
+                    'Téléphone Donateur' => $telephoneDonateur
+                ];
+            }
+
+            $collecteData = [
+                'Collecte' => [
+                    'Titre' => $collecteFond->titre,
+                    'Description' => $collecteFond->description,
+                    'Dons' => $donsData,
+                ],
+            ];
+
+            $data[] = $collecteData;
+        }
+    }
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Liste Collectes De Fonds  avec les donateurs associés',
+        'data' => $data,
+    ]);
+}
+
+
+
+public function listeDonateurAUnDon($collecteId)
+{
+    $fondation = auth()->user();
+    
+   $collecteFond = $fondation->collecteDeFonds->find($collecteId);
+
+    if (!$collecteFond) {
+        return response()->json([
+            'status' => true,
+            'message' => 'La collecte de fonds spécifiée n\'existe pas pour cette fondation',
+            'data' => [],
+        ]);
+    }
+
+    $donsData = [];
+
+    $dons = $collecteFond->dons;
+
+    if ($dons->isEmpty()) {
+        $data[] = [
+            'Collecte' => [
+                'Titre' => $collecteFond->titre,
+                'Description' => $collecteFond->description,
+                'Dons' => 'Aucun don associé à cette collecte pour le moment',
+            ],
+        ];
+    } else {
         foreach ($dons as $don) {
             $donReçu = $don->amount;
             $donateur = User::find($don->user_id);
 
             $nomDonateur = $donateur->nom;
             $prenomDonateur = $donateur->prenom;
-
+            $telephoneDonateur = $donateur->telephone;
             $donsData[] = [
                 'Montant Donné' => $donReçu,
                 'Nom Donateur' => $nomDonateur,
-                'Prenom Donateur' => $prenomDonateur,
+                'Prénom Donateur' => $prenomDonateur,
+                'Téléphone Donateur' => $telephoneDonateur
             ];
         }
 
@@ -852,9 +958,10 @@ public function listeDonateurAUnDon()
 
     return response()->json([
         'status' => true,
-        'message' => 'Liste des collectes avec dons et donateurs associés',
+        'message' => 'Liste des dons et donateurs associés à la collecte de fonds spécifiée',
         'data' => $data,
     ]);
 }
+
 
 }

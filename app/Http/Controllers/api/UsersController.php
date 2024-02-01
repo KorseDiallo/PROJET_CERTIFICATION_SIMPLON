@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\inscriptionUsersRequest;
 use App\Http\Requests\loginUsersRequest;
+use App\Models\collecteDeFond;
+use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -689,4 +691,119 @@ public function dashboardAdmin(){
             ]); 
         }
     }
+
+
+    public function historiqueDesDonsPourUnDonateur()
+{
+    $user = auth()->user();
+
+    if ($user && $user->role === 'admin') {
+        $dons = Payment::all(); 
+    } else {
+       
+        $donateur = auth()->user();
+        $dons = $donateur->dons;
+    }
+
+    $tableCollecte = [];
+
+    if ($dons->isEmpty()) {
+        return response()->json([
+            "status" => true,
+            "message" => "Aucun historique de dons trouvé",
+            'data' => [],
+        ]);
+    }
+
+    foreach ($dons as $don) {
+        if ($don->collecteDeFond) {
+            $tableCollecte[] = [
+                'Montant Donné' => $don->amount,
+                'Titre' => $don->collecteDeFond->titre,
+                'Description Collecte' => $don->collecteDeFond->description,
+                'Date Don Effectué' => $don->created_at->format('j/m/Y H:i:s'),
+            ];
+        }
+    }
+
+    return response()->json([
+        "status" => true,
+        "message" => "Voici l'historique des dons",
+        'data' => $tableCollecte,
+    ]);
+}
+
+
+public function listeDonateurADesDons()
+{
+    $user = auth()->user();
+
+   
+    if ($user && $user->role === 'admin') {
+        $collecteFonds = CollecteDeFond::with('dons')->get();
+        dd($collecteFonds);
+        $data = [];
+
+        if ($collecteFonds->isEmpty()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Aucune collecte avec dons trouvée',
+                'data' => [],
+            ]);
+        }
+
+        foreach ($collecteFonds as $collecteFond) {
+            $donsData = [];
+
+            $dons = $collecteFond->dons;
+
+            if ($dons->isEmpty()) {
+                $data[] = [
+                    'Collecte' => [
+                        'Titre' => $collecteFond->titre,
+                        'Description' => $collecteFond->description,
+                        'Dons' => 'Aucun don associé à cette collecte pour le moment',
+                    ],
+                ];
+            } else {
+                foreach ($dons as $don) {
+                    $donReçu = $don->amount;
+                    $nomDonateur = $don->donateur->nom;
+                    $prenomDonateur = $don->donateur->prenom;
+                    $telephoneDonateur = $don->donateur->telephone;
+                    $donsData[] = [
+                        'Montant Donné' => $donReçu,
+                        'Nom Donateur' => $nomDonateur,
+                        'Prénom Donateur' => $prenomDonateur,
+                        'Téléphone Donateur' => $telephoneDonateur
+                    ];
+                }
+
+                $collecteData = [
+                    'Collecte' => [
+                        'Titre' => $collecteFond->titre,
+                        'Description' => $collecteFond->description,
+                        'Dons' => $donsData,
+                    ],
+                ];
+
+                $data[] = $collecteData;
+            }
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Liste Collectes De Fonds avec les donateurs associés',
+            'data' => $data,
+        ]);
+    } else {
+        return response()->json([
+            'status' => false,
+            'message' => 'Accès non autorisé. Vous devez être administrateur.',
+            'data' => [],
+        ], 403);
+    }
+}
+
+
 }
