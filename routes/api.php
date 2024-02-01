@@ -30,7 +30,7 @@ Route::middleware(['auth:api','admin'])->group(function(){
     Route::delete('/supprimer/{user}',[UsersController::class,"destroy"]);
     Route::get('/listeDonateur',[UsersController::class,"listeDonateur"]);
     Route::get('/listeFondation',[UsersController::class,"listeFondation"]);
-    Route::get('/voirHistoriqueDon',[UsersController::class,"historiqueDesDonsPourUnDonateur"]);
+    Route::get('/voirHistoriqueDon',[UsersController::class,"VoirhistoriqueDesDonsPourUnDonateur"]);
     Route::get('/voirListeDonateurADesDons',[UsersController::class,"listeDonateurADesDons"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });

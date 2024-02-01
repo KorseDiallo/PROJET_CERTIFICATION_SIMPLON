@@ -693,7 +693,45 @@ public function dashboardAdmin(){
     }
 
 
-    public function historiqueDesDonsPourUnDonateur()
+    /**
+ * @OA\Get(
+ *     path="/api/voirHistoriqueDon",
+ *     summary="Historique de tous les dons effectué par les donnateurs",
+ *     operationId="voirHistoriqueDesDonsPourUnDonateur",
+ *     tags={"Voir l'historique de tous les dons par l'administrateur"},
+ *     security={{"bearerAuth": {}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Historique des dons récupéré avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Voici l'historique des dons"),
+ *             @OA\Property(property="data", type="array",
+ *                 @OA\Items(
+ *                     @OA\Property(property="Montant Donné", type="number", example=100),
+ *                     @OA\Property(property="Titre", type="string", example="Titre de la collecte"),
+ *                     @OA\Property(property="Description Collecte", type="string", example="Description de la collecte"),
+ *                     @OA\Property(property="Date Don Effectué", type="string", format="datetime", example="2024-02-01 12:34:56"),
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Non autorisé. Jeton manquant ou invalide."
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Accès interdit. Autorisation insuffisante pour accéder à l'historique des dons."
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Aucun historique de dons trouvé."
+ *     )
+ * )
+ */
+
+    public function VoirhistoriqueDesDonsPourUnDonateur()
 {
     $user = auth()->user();
 

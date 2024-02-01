@@ -819,6 +819,76 @@
                 ]
             }
         },
+        "/api/voirHistoriqueDon": {
+            "get": {
+                "tags": [
+                    "Voir l'historique de tous les dons par l'administrateur"
+                ],
+                "summary": "Historique de tous les dons effectué par les donnateurs",
+                "operationId": "voirHistoriqueDesDonsPourUnDonateur",
+                "responses": {
+                    "200": {
+                        "description": "Historique des dons récupéré avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Voici l'historique des dons"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "Montant Donné": {
+                                                        "type": "number",
+                                                        "example": 100
+                                                    },
+                                                    "Titre": {
+                                                        "type": "string",
+                                                        "example": "Titre de la collecte"
+                                                    },
+                                                    "Description Collecte": {
+                                                        "type": "string",
+                                                        "example": "Description de la collecte"
+                                                    },
+                                                    "Date Don Effectué": {
+                                                        "type": "string",
+                                                        "format": "datetime",
+                                                        "example": "2024-02-01 12:34:56"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé. Jeton manquant ou invalide."
+                    },
+                    "403": {
+                        "description": "Accès interdit. Autorisation insuffisante pour accéder à l'historique des dons."
+                    },
+                    "404": {
+                        "description": "Aucun historique de dons trouvé."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/creerCollecte": {
             "post": {
                 "tags": [
