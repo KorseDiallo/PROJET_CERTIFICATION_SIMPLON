@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\collecteDeFondsRequest;
 use App\Http\Requests\modificationProfilRequest;
 use App\Http\Requests\modifierCollecteDeFondsRequest;
+use App\Mail\CollecteEmail;
+use App\Models\abonnement;
 use App\Models\collecteDeFond;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use OpenApi\Annotations as OA;
 
@@ -97,6 +100,24 @@ class collecteDeFondController extends Controller
         $collecteDeFond->user_id = $fondationId;
 
         if ($collecteDeFond->save()) {
+            $fondation = auth()->user();
+            $abonnements = abonnement::where('fondation_id', $fondation->id)
+                ->where('suivre', true)->get();
+            // dd($abonnements);
+            $datas=[];
+            foreach ($abonnements as $abonnement) {
+                $datas[] = [
+                    'email_donateur' => $abonnement->donateur->email,
+                ];
+            }
+
+            foreach($datas as $data){
+                // dd($data['email_donateur']);
+                Mail::to($data['email_donateur'])
+                    ->send(new CollecteEmail($fondation));
+            }
+            
+
             return response()->json([
                 "status" => true,
                 "message" => "La Collecte de Fonds a été bien crée",
@@ -536,7 +557,7 @@ class collecteDeFondController extends Controller
         }
     }
 
- /**
+    /**
      * Récupérer la liste de toutes les collectes de fonds clôturées pour la personne connectée.
      *
      * @return \Illuminate\Http\JsonResponse
@@ -766,135 +787,133 @@ class collecteDeFondController extends Controller
     }
 
     /**
- * @OA\Get(
- *     path="/api/historiqueDons",
- *     summary="Historique des dons pour un donateur",
- *     operationId="historiqueDesDonsPourUnDonateur",
- *     tags={"Historique des dons pour un donateur"},
- *     security={{"bearerAuth": {}}},
- *     @OA\Response(
- *         response=200,
- *         description="Historique des dons récupéré avec succès",
- *         @OA\JsonContent(
- *             @OA\Property(property="status", type="boolean", example=true),
- *             @OA\Property(property="message", type="string", example="Voici l'historique de vos dons"),
- *             @OA\Property(property="data", type="array",
- *                 @OA\Items(
- *                     @OA\Property(property="Montant Donné", type="number", example=100),
- *                     @OA\Property(property="Titre", type="string", example="Titre de la collecte"),
- *                     @OA\Property(property="Description Collecte", type="string", example="Description de la collecte"),
- *                     @OA\Property(property="Date Don Effectué", type="string", format="datetime", example="2024-02-01 12:34:56"),
- *                 )
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="Non autorisé. Jeton manquant ou invalide."
- *     ),
- *     @OA\Response(
- *         response=403,
- *         description="Accès interdit. Utilisateur non autorisé."
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Aucun historique de dons trouvé."
- *     )
- * )
- */
+     * @OA\Get(
+     *     path="/api/historiqueDons",
+     *     summary="Historique des dons pour un donateur",
+     *     operationId="historiqueDesDonsPourUnDonateur",
+     *     tags={"Historique des dons pour un donateur"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Historique des dons récupéré avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Voici l'historique de vos dons"),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="Montant Donné", type="number", example=100),
+     *                     @OA\Property(property="Titre", type="string", example="Titre de la collecte"),
+     *                     @OA\Property(property="Description Collecte", type="string", example="Description de la collecte"),
+     *                     @OA\Property(property="Date Don Effectué", type="string", format="datetime", example="2024-02-01 12:34:56"),
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non autorisé. Jeton manquant ou invalide."
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Accès interdit. Utilisateur non autorisé."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Aucun historique de dons trouvé."
+     *     )
+     * )
+     */
 
     public function historiqueDesDonsPourUnDonateur()
     {
         $donateur = auth()->user();
         $tableCollecte = [];
-    
+
         $dons = $donateur->dons;
-       
+
         if ($dons->isEmpty()) {
-           
+
             return response()->json([
                 "status" => true,
                 "message" => "Vous n'avez pas un historique de dons pour le moment",
                 'data' => [],
             ]);
         }
-        
+
         foreach ($dons as $don) {
-             if ($don->collecteDeFond) {
-              
+            if ($don->collecteDeFond) {
+
                 $tableCollecte[] = [
                     'Montant Donné' => $don->amount,
                     'Titre' => $don->collecteDeFond->titre,
                     'Description Collecte' => $don->collecteDeFond->description,
                     'Date Don Effectué' => $don->created_at->format('j/m/Y H:i:s'),
-                    
+
                 ];
             }
-           
         }
-    
+
         return response()->json([
             "status" => true,
             "message" => "Voici l'historique de vos dons",
             'data' => $tableCollecte,
         ]);
-
     }
-    
+
 
     /**
- * @OA\Get(
- *     path="/api/historiqueDon/{donId}",
- *     summary="Historique d'un don pour un donateur",
- *     operationId="historiqueDonPourUnDonateur",
- *     tags={"Historique d'un don pour un donateur"},
- *     security={{"bearerAuth": {}}},
- *     @OA\Parameter(
- *         name="donId",
- *         in="path",
- *         required=true,
- *         description="ID du don",
- *         @OA\Schema(type="integer")
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Historique du don récupéré avec succès",
- *         @OA\JsonContent(
- *             @OA\Property(property="status", type="boolean", example=true),
- *             @OA\Property(property="message", type="string", example="Voici l'historique du don spécifié"),
- *             @OA\Property(property="data", type="array",
- *                 @OA\Items(
- *                     @OA\Property(property="Montant Donné", type="number", example=100),
- *                     @OA\Property(property="Titre", type="string", example="Titre de la collecte"),
- *                     @OA\Property(property="Description Collecte", type="string", example="Description de la collecte"),
- *                     @OA\Property(property="Date Don Effectué", type="string", format="datetime", example="2024-02-01 12:34:56"),
- *                 )
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="Non autorisé. Jeton manquant ou invalide."
- *     ),
- *     @OA\Response(
- *         response=403,
- *         description="Accès interdit. Donateur non autorisé pour ce don."
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Le don spécifié n'existe pas ou ne vous appartient pas."
- *     )
- * )
- */
+     * @OA\Get(
+     *     path="/api/historiqueDon/{donId}",
+     *     summary="Historique d'un don pour un donateur",
+     *     operationId="historiqueDonPourUnDonateur",
+     *     tags={"Historique d'un don pour un donateur"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="donId",
+     *         in="path",
+     *         required=true,
+     *         description="ID du don",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Historique du don récupéré avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Voici l'historique du don spécifié"),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="Montant Donné", type="number", example=100),
+     *                     @OA\Property(property="Titre", type="string", example="Titre de la collecte"),
+     *                     @OA\Property(property="Description Collecte", type="string", example="Description de la collecte"),
+     *                     @OA\Property(property="Date Don Effectué", type="string", format="datetime", example="2024-02-01 12:34:56"),
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non autorisé. Jeton manquant ou invalide."
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Accès interdit. Donateur non autorisé pour ce don."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Le don spécifié n'existe pas ou ne vous appartient pas."
+     *     )
+     * )
+     */
 
     public function historiqueDonPourUnDonateur($donId)
     {
         $donateur = auth()->user();
         $tableCollecte = [];
-        
-       
+
+
         $don = $donateur->dons->find($donId);
-    
+
         if (!$don) {
             return response()->json([
                 "status" => true,
@@ -902,83 +921,195 @@ class collecteDeFondController extends Controller
                 'data' => [],
             ]);
         }
-    
+
         $tableCollecte[] = [
             'Montant Donné' => $don->amount,
             'Titre' => $don->collecteDeFond->titre,
             'Description Collecte' => $don->collecteDeFond->description,
             'Date Don Effectué' => $don->created_at->format('j/m/Y H:i:s'),
         ];
-    
+
         return response()->json([
             "status" => true,
             "message" => "Voici l'historique du don spécifié",
             'data' => $tableCollecte,
         ]);
     }
-    
+
 
     /**
- * @OA\Get(
- *     path="/api/listeDonateurADesDons",
- *     summary="Liste des collectes avec les donateurs associés",
- *     operationId="listeDonateurADesDons",
- *     tags={"Liste des collectes de fonds pour une fondation et les dons associés à ses collectes"},
- *     security={{"bearerAuth": {}}},
- *     @OA\Response(
- *         response=200,
- *         description="Liste des collectes avec donateurs récupérée avec succès",
- *         @OA\JsonContent(
- *             @OA\Property(property="status", type="boolean", example=true),
- *             @OA\Property(property="message", type="string", example="Liste Collectes De Fonds avec les donateurs associés"),
- *             @OA\Property(property="data", type="array",
- *                 @OA\Items(
- *                     @OA\Property(property="Collecte", type="array",
- *                         @OA\Items(
- *                             @OA\Property(property="Titre", type="string", example="Titre de la collecte"),
- *                             @OA\Property(property="Description", type="string", example="Description de la collecte"),
- *                             @OA\Property(property="Dons", type="array",
- *                                 @OA\Items(
- *                                     @OA\Property(property="Montant Donné", type="number", example=100),
- *                                     @OA\Property(property="Nom Donateur", type="string", example="Nom du donateur"),
- *                                     @OA\Property(property="Prénom Donateur", type="string", example="Prénom du donateur"),
- *                                     @OA\Property(property="Téléphone Donateur", type="string", example="123-456-789"),
- *                                 )
- *                             ),
- *                         )
- *                     ),
- *                 )
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="Non autorisé. Jeton manquant ou invalide."
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Aucune collecte avec dons trouvée."
- *     )
- * )
- */
+     * @OA\Get(
+     *     path="/api/listeDonateurADesDons",
+     *     summary="Liste des collectes avec les donateurs associés",
+     *     operationId="listeDonateurADesDons",
+     *     tags={"Liste des collectes de fonds pour une fondation et les dons associés à ses collectes"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste des collectes avec donateurs récupérée avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Liste Collectes De Fonds avec les donateurs associés"),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="Collecte", type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="Titre", type="string", example="Titre de la collecte"),
+     *                             @OA\Property(property="Description", type="string", example="Description de la collecte"),
+     *                             @OA\Property(property="Dons", type="array",
+     *                                 @OA\Items(
+     *                                     @OA\Property(property="Montant Donné", type="number", example=100),
+     *                                     @OA\Property(property="Nom Donateur", type="string", example="Nom du donateur"),
+     *                                     @OA\Property(property="Prénom Donateur", type="string", example="Prénom du donateur"),
+     *                                     @OA\Property(property="Téléphone Donateur", type="string", example="123-456-789"),
+     *                                 )
+     *                             ),
+     *                         )
+     *                     ),
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non autorisé. Jeton manquant ou invalide."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Aucune collecte avec dons trouvée."
+     *     )
+     * )
+     */
 
-public function listeDonateurADesDons()
-{
-    $fondation = auth()->user();
-    
-    $collecteFonds = $fondation->collecteDeFonds;
-   
-    $data = [];
+    public function listeDonateurADesDons()
+    {
+        $fondation = auth()->user();
 
-    if ($collecteFonds->isEmpty()) {
+        $collecteFonds = $fondation->collecteDeFonds;
+
+        $data = [];
+
+        if ($collecteFonds->isEmpty()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Aucune collecte avec dons trouvée',
+                'data' => [],
+            ]);
+        }
+
+        foreach ($collecteFonds as $collecteFond) {
+            $donsData = [];
+
+            $dons = $collecteFond->dons;
+
+            if ($dons->isEmpty()) {
+                $data[] = [
+                    'Collecte' => [
+                        'Titre' => $collecteFond->titre,
+                        'Description' => $collecteFond->description,
+                        'Dons' => 'Aucun don associé à cette collecte pour le moment',
+                    ],
+                ];
+            } else {
+                foreach ($dons as $don) {
+                    $donReçu = $don->amount;
+                    $donateur = User::find($don->user_id);
+
+                    $nomDonateur = $donateur->nom;
+                    $prenomDonateur = $donateur->prenom;
+                    $telephoneDonateur = $donateur->telephone;
+                    $donsData[] = [
+                        'Montant Donné' => $donReçu,
+                        'Nom Donateur' => $nomDonateur,
+                        'Prénom Donateur' => $prenomDonateur,
+                        'Téléphone Donateur' => $telephoneDonateur
+                    ];
+                }
+
+                $collecteData = [
+                    'Collecte' => [
+                        'Titre' => $collecteFond->titre,
+                        'Description' => $collecteFond->description,
+                        'Dons' => $donsData,
+                    ],
+                ];
+
+                $data[] = $collecteData;
+            }
+        }
+
         return response()->json([
             'status' => true,
-            'message' => 'Aucune collecte avec dons trouvée',
-            'data' => [],
+            'message' => 'Liste Collectes De Fonds  avec les donateurs associés',
+            'data' => $data,
         ]);
     }
 
-    foreach ($collecteFonds as $collecteFond) {
+    /**
+     * @OA\Get(
+     *     path="/api/listeDonateurAUnDon/{collecteId}",
+     *     summary="Liste des dons et donateurs associés à une collecte de fonds spécifiée",
+     *     operationId="listeDonateurAUnDon",
+     *     tags={"Liste d'une collecte de fond pour une fondation et les dons associés à cette collecte"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="collecteId",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la collecte de fonds",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste des dons et donateurs associés récupérée avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Liste des dons et donateurs associés à la collecte de fonds spécifiée"),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="Collecte", type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="Titre", type="string", example="Titre de la collecte"),
+     *                             @OA\Property(property="Description", type="string", example="Description de la collecte"),
+     *                             @OA\Property(property="Dons", type="array",
+     *                                 @OA\Items(
+     *                                     @OA\Property(property="Montant Donné", type="number", example=100),
+     *                                     @OA\Property(property="Nom Donateur", type="string", example="Nom du donateur"),
+     *                                     @OA\Property(property="Prénom Donateur", type="string", example="Prénom du donateur"),
+     *                                     @OA\Property(property="Téléphone Donateur", type="string", example="123-456-789"),
+     *                                 )
+     *                             ),
+     *                         )
+     *                     ),
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non autorisé. Jeton manquant ou invalide."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="La collecte de fonds spécifiée n'existe pas pour cette fondation."
+     *     )
+     * )
+     */
+
+    public function listeDonateurAUnDon($collecteId)
+    {
+        $fondation = auth()->user();
+
+        $collecteFond = $fondation->collecteDeFonds->find($collecteId);
+
+        if (!$collecteFond) {
+            return response()->json([
+                'status' => true,
+                'message' => 'La collecte de fonds spécifiée n\'existe pas pour cette fondation',
+                'data' => [],
+            ]);
+        }
+
         $donsData = [];
 
         $dons = $collecteFond->dons;
@@ -1017,125 +1148,11 @@ public function listeDonateurADesDons()
 
             $data[] = $collecteData;
         }
-    }
 
-    return response()->json([
-        'status' => true,
-        'message' => 'Liste Collectes De Fonds  avec les donateurs associés',
-        'data' => $data,
-    ]);
-}
-
-/**
- * @OA\Get(
- *     path="/api/listeDonateurAUnDon/{collecteId}",
- *     summary="Liste des dons et donateurs associés à une collecte de fonds spécifiée",
- *     operationId="listeDonateurAUnDon",
- *     tags={"Liste d'une collecte de fond pour une fondation et les dons associés à cette collecte"},
- *     security={{"bearerAuth": {}}},
- *     @OA\Parameter(
- *         name="collecteId",
- *         in="path",
- *         required=true,
- *         description="ID de la collecte de fonds",
- *         @OA\Schema(type="integer")
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Liste des dons et donateurs associés récupérée avec succès",
- *         @OA\JsonContent(
- *             @OA\Property(property="status", type="boolean", example=true),
- *             @OA\Property(property="message", type="string", example="Liste des dons et donateurs associés à la collecte de fonds spécifiée"),
- *             @OA\Property(property="data", type="array",
- *                 @OA\Items(
- *                     @OA\Property(property="Collecte", type="array",
- *                         @OA\Items(
- *                             @OA\Property(property="Titre", type="string", example="Titre de la collecte"),
- *                             @OA\Property(property="Description", type="string", example="Description de la collecte"),
- *                             @OA\Property(property="Dons", type="array",
- *                                 @OA\Items(
- *                                     @OA\Property(property="Montant Donné", type="number", example=100),
- *                                     @OA\Property(property="Nom Donateur", type="string", example="Nom du donateur"),
- *                                     @OA\Property(property="Prénom Donateur", type="string", example="Prénom du donateur"),
- *                                     @OA\Property(property="Téléphone Donateur", type="string", example="123-456-789"),
- *                                 )
- *                             ),
- *                         )
- *                     ),
- *                 )
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="Non autorisé. Jeton manquant ou invalide."
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="La collecte de fonds spécifiée n'existe pas pour cette fondation."
- *     )
- * )
- */
-
-public function listeDonateurAUnDon($collecteId)
-{
-    $fondation = auth()->user();
-    
-   $collecteFond = $fondation->collecteDeFonds->find($collecteId);
-
-    if (!$collecteFond) {
         return response()->json([
             'status' => true,
-            'message' => 'La collecte de fonds spécifiée n\'existe pas pour cette fondation',
-            'data' => [],
+            'message' => 'Liste des dons et donateurs associés à la collecte de fonds spécifiée',
+            'data' => $data,
         ]);
     }
-
-    $donsData = [];
-
-    $dons = $collecteFond->dons;
-
-    if ($dons->isEmpty()) {
-        $data[] = [
-            'Collecte' => [
-                'Titre' => $collecteFond->titre,
-                'Description' => $collecteFond->description,
-                'Dons' => 'Aucun don associé à cette collecte pour le moment',
-            ],
-        ];
-    } else {
-        foreach ($dons as $don) {
-            $donReçu = $don->amount;
-            $donateur = User::find($don->user_id);
-
-            $nomDonateur = $donateur->nom;
-            $prenomDonateur = $donateur->prenom;
-            $telephoneDonateur = $donateur->telephone;
-            $donsData[] = [
-                'Montant Donné' => $donReçu,
-                'Nom Donateur' => $nomDonateur,
-                'Prénom Donateur' => $prenomDonateur,
-                'Téléphone Donateur' => $telephoneDonateur
-            ];
-        }
-
-        $collecteData = [
-            'Collecte' => [
-                'Titre' => $collecteFond->titre,
-                'Description' => $collecteFond->description,
-                'Dons' => $donsData,
-            ],
-        ];
-
-        $data[] = $collecteData;
-    }
-
-    return response()->json([
-        'status' => true,
-        'message' => 'Liste des dons et donateurs associés à la collecte de fonds spécifiée',
-        'data' => $data,
-    ]);
-}
-
-
 }
