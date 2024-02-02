@@ -168,6 +168,14 @@ class UsersController extends Controller
  *              @OA\Property(property="message", type="string", example="Les Identifiants sont invalides"),
  *          )
  *      ),
+ *      @OA\Response(
+ *          response=403,
+ *          description="Compte bloqué, demande refusée, ou en attente de vérification",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Désolé, mais votre compte a été bloqué, votre demande a été refusée ou est en attente de vérification."),
+ *          )
+ *      ),
  * )
  */
 
@@ -185,6 +193,11 @@ public function login(loginUsersRequest $request){
             return response()->json([
                 "status" => false,
                 "message" => "Désoler mais votre compte a été bloquer.Merci de rentrer en contact avec L'Admin",
+            ]);
+        }else if($verifUser->role=='refuse'){
+            return response()->json([
+                "status" => false,
+                "message" => "Désoler mais votre Demande à été Refusée.Merci de rentrer en contact avec L'Admin",
             ]);
         }
     }

@@ -103,7 +103,7 @@ class collecteDeFondController extends Controller
             $fondation = auth()->user();
             $abonnements = abonnement::where('fondation_id', $fondation->id)
                 ->where('suivre', true)->get();
-            // dd($abonnements);
+           
             $datas=[];
             foreach ($abonnements as $abonnement) {
                 $datas[] = [
@@ -112,7 +112,6 @@ class collecteDeFondController extends Controller
             }
 
             foreach($datas as $data){
-                // dd($data['email_donateur']);
                 Mail::to($data['email_donateur'])
                     ->send(new CollecteEmail($fondation));
             }

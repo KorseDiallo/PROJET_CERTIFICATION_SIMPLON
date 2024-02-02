@@ -837,6 +837,26 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "Compte bloqué, demande refusée, ou en attente de vérification",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Désolé, mais votre compte a été bloqué, votre demande a été refusée ou est en attente de vérification."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
