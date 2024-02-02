@@ -173,7 +173,32 @@ class UsersController extends Controller
 
 public function login(loginUsersRequest $request){
    
+    $verifUser= User::where('email',request('email'))->first();
+    
+    if($verifUser->role=='fondation'){
+        if($verifUser->statut=="enattente"){
+            return response()->json([
+                "status" => false,
+                "message" => "Merci de patienter le temps qu'on verifie la veracité de votre fondation.",
+            ]);
+        }else if($verifUser->bloque==true){
+            return response()->json([
+                "status" => false,
+                "message" => "Désoler mais votre compte a été bloquer.Merci de rentrer en contact avec L'Admin",
+            ]);
+        }
+    }
 
+    if($verifUser->role=='donateur'){
+        if($verifUser->bloque==true){
+            return response()->json([
+                "status" => false,
+                "message" => "Désoler mais votre compte a été bloquer.Merci de rentrer en contact avec L'Admin",
+            ]);
+        }
+    }  
+    
+    
     $credentials = $request->only('email', 'password');
 
     if(!$token=JWTAuth::attempt($credentials)){
