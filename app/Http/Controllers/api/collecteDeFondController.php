@@ -1154,4 +1154,7 @@ class collecteDeFondController extends Controller
             'data' => $data,
         ]);
     }
+
+
+    
 }
