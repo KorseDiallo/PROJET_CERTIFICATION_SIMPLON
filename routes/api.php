@@ -33,7 +33,7 @@ Route::middleware(['auth:api','admin'])->group(function(){
     Route::get('/listeFondation',[UsersController::class,"listeFondation"]);
     Route::get('/voirHistoriqueDon',[UsersController::class,"VoirhistoriqueDesDonsPourUnDonateur"]);
     Route::get('/voirListeDonateurADesDons',[UsersController::class,"listeDonateurADesDons"]);
-    Route::get('/logout',[UsersController::class,"logout"]);
+    Route::get('/logoutAdmin',[UsersController::class,"logout"]);
 });
     
 

@@ -34,14 +34,24 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => bcrypt('password'), 
             'telephone' => $this->faker->phoneNumber,
-            'role' => 'fondation',
+            'role' => 'admin',
             // 'remember_token' => Str::random(10),
             'statut' => 'accepte',
-            'bloque' => $this->faker->boolean,
+            'bloque' => false,
+            // 'bloque' => $this->faker->boolean,
             'is_deleted' => false,
             'created_at' => now(),
             'updated_at' => now(),
         ];
+    }
+
+    public function donneur()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => 'donateur',
+            ];
+        });
     }
 
     /**
