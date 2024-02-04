@@ -53,6 +53,7 @@ Route::middleware(['auth:api','donateur'])->group(function(){
     Route::post('/sabonner/{fondationId}',[abonnementController::class,"sabonner"]);
     Route::post('/sedesabonner/{fondationId}',[abonnementController::class,"sedesabonner"]);
     Route::get('/listeFondationAbonner',[abonnementController::class,"listeFondationAbonner"]);
+    Route::get('/listeFondations',[UsersController::class,"listeFondationPourLesDonateurs"]);
     Route::get('/logout',[UsersController::class,"logout"]);
 });
     //les deux sortie de l'api paytech sorti du middleware

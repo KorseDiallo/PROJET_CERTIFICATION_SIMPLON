@@ -574,7 +574,7 @@ public function dashboardAdmin(){
 
     public function listeFondation(){
         $listeFondation= User::where('role','fondation')->get();
-
+                
          // Filtrer les attributs non vides avant de les renvoyer
         $listeFondation = $listeFondation->map(function ($user) {
             return collect($user->toArray())->filter(function ($value) {
@@ -594,12 +594,84 @@ public function dashboardAdmin(){
         }else{
             return response()->json([
                 "status" => false,
-                "message" => "Vous avez aucun donnateur inscrit pour le moment",
+                "message" => "Vous avez aucune fondation inscrit pour le moment",
                 "data" => []
                 
             ]); 
         }
     }
+
+
+    /**
+ * @OA\Get(
+ *     path="/api/listeFondations",
+ *     summary="Liste des fondations pour les donateurs",
+ *     description="Récupère la liste des fondations acceptées pour les donateurs",
+ *     operationId="listeFondationPourLesDonateurs",
+ *     tags={"Donateur: Liste De Toutes Les Fondations"},
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Liste des fondations récupérée avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Liste de tous les fondations"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="id", type="integer"),
+ *                     @OA\Property(property="name", type="string"),
+ *                     @OA\Property(property="email", type="string"),
+ *                     @OA\Property(property="other_attribute", type="string"),
+ *                    
+ *                 ),
+ *             ),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Aucune fondation inscrite pour le moment",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Vous n'avez aucune fondation inscrite pour le moment"),
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+ *         ),
+ *     ),
+ * )
+ */
+
+
+ public function listeFondationPourLesDonateurs(){
+        $listeFondation= User::where('role','fondation')
+               ->where('statut','accepte')->get(); 
+         // Filtrer les attributs non vides avant de les renvoyer
+        $listeFondation = $listeFondation->map(function ($user) {
+            return collect($user->toArray())->filter(function ($value) {
+                return !is_null($value) && $value !== '';
+            })->all();
+        });
+
+       
+
+        if($listeFondation->isNotEmpty()){
+            return response()->json([
+                "status" => true,
+                "message" => "Liste de tous les fondations",
+                "data" => $listeFondation
+                
+            ]); 
+        }else{
+            return response()->json([
+                "status" => false,
+                "message" => "Vous avez aucune fondation inscrit pour le moment",
+                "data" => []
+                
+            ]); 
+        }
+    }
+
 
 
     /**
