@@ -1,4 +1,6 @@
 FROM php:8.2-apache
+WORKDIR /var/www/html
+COPY . .
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
@@ -23,8 +25,3 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 
 RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
     install-php-extensions amqp
-
-WORKDIR /var/www
-COPY . .
-RUN chown -R www-data:www-data /var/www/storage
-COPY ./docker/vhosts.conf /etc/apache2/sites-available/000-default.conf
