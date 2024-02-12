@@ -628,6 +628,7 @@ class collecteDeFondController extends Controller
         $listeCollecteEnCours = collecteDeFond::where('collecte_de_Fonds.statut', 'encours')
     ->join('users', 'collecte_de_Fonds.user_id', '=', 'users.id')
     ->select(
+        'collecte_de_Fonds.id',
         'collecte_de_Fonds.titre',
         'collecte_de_Fonds.description',
         'collecte_de_Fonds.image',
