@@ -535,8 +535,24 @@ class collecteDeFondController extends Controller
         $fondation = auth()->user();
         $fondationId = $fondation->id;
 
-        $listeCollecteEnCours = collecteDeFond::where('statut', 'encours')
-            ->where('user_id', $fondationId)->get();
+        // $listeCollecteEnCours = collecteDeFond::where('statut', 'encours')
+        //     ->where('user_id', $fondationId)->get();
+        $listeCollecteEnCours = collecteDeFond::where('collecte_de_fonds.statut', 'encours')
+        ->join('users', 'collecte_de_fonds.user_id', '=', 'users.id')
+        ->where('collecte_de_fonds.user_id', $fondationId)
+        ->select(
+            'collecte_de_fonds.id',
+            'collecte_de_fonds.titre',
+            'collecte_de_fonds.description',
+            'collecte_de_fonds.image',
+            'collecte_de_fonds.objectifFinancier',
+            'collecte_de_fonds.numeroCompte',
+            'collecte_de_fonds.statut',
+            'users.nom as nom_fondation',
+            'collecte_de_fonds.created_at',
+            'collecte_de_fonds.updated_at'
+        )
+        ->get();
 
 
         if ($listeCollecteEnCours->isNotEmpty()) {
@@ -603,8 +619,27 @@ class collecteDeFondController extends Controller
 
     public function listeCollecte()
     {
-        $listeCollecteEnCours = collecteDeFond::where('statut', 'encours')->get();
+        // $listeCollecteEnCours = collecteDeFond::where('statut', 'encours')->get();
+        // $listeCollecteEnCours = collecteDeFond::where('collecte_de_Fonds.statut', 'encours')
+        // ->join('users', 'collecte_de_Fonds.user_id', '=', 'users.id')
+        // ->select('collecte_de_Fonds.*', 'users.nom as nom_fondation')
+        // ->get();
 
+        $listeCollecteEnCours = collecteDeFond::where('collecte_de_Fonds.statut', 'encours')
+    ->join('users', 'collecte_de_Fonds.user_id', '=', 'users.id')
+    ->select(
+        'collecte_de_Fonds.titre',
+        'collecte_de_Fonds.description',
+        'collecte_de_Fonds.image',
+        'collecte_de_Fonds.objectifFinancier',
+        'collecte_de_Fonds.numeroCompte',
+        'collecte_de_Fonds.statut',
+        'users.nom as nom_fondation',
+        'collecte_de_Fonds.created_at',
+        'collecte_de_Fonds.updated_at'
+        
+    )
+    ->get();
 
         if ($listeCollecteEnCours->isNotEmpty()) {
             return response()->json([
