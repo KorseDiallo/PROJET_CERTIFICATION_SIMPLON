@@ -221,6 +221,11 @@ public function login(loginUsersRequest $request){
 
     $user= JWTAuth::user();
 
+     // Filtrer les attributs avec des valeurs non nulles ou non vides
+     $userFiltrer = array_filter($user->toArray(), function ($value) {
+        return $value !== null && $value !== '';
+    });
+
     $role= $user->role;
 
     if ($role === 'admin') {
@@ -236,7 +241,7 @@ public function login(loginUsersRequest $request){
         'message' => $message,
         'token' => $token,
         'role' => $role,
-        'datas' => $user,
+        'datas' => $userFiltrer,
     ]);
 }
 
