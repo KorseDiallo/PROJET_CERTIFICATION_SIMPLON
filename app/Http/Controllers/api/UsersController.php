@@ -5,11 +5,13 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\inscriptionUsersRequest;
 use App\Http\Requests\loginUsersRequest;
+use App\Mail\demandeApprouver;
 use App\Models\collecteDeFond;
 use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use OpenApi\Annotations as OA;
 
@@ -297,6 +299,8 @@ public function dashboardAdmin(){
     public function approuverDemande(User $user){
         $user->statut='accepte';
         if($user->save()){
+            Mail::to($user->email)->send(new demandeApprouver($user));
+            
             return response()->json([
                 "status" => true,
                 "message" => "Demande approuvée avec succès"
