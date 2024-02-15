@@ -35,6 +35,7 @@ class UserFactory extends Factory
             'password' => bcrypt('password'), 
             'telephone' => $this->faker->phoneNumber,
             'role' => 'admin',
+            // 'role' => 'fondation',
             // 'remember_token' => Str::random(10),
             'statut' => 'accepte',
             'bloque' => false,
