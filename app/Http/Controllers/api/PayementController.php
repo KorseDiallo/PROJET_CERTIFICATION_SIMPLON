@@ -53,6 +53,9 @@ class PayementController extends Controller
  *          @OA\JsonContent(
  *              @OA\Property(property="price", type="integer"),
  *              @OA\Property(property="collecte_id", type="integer"),
+ *              @OA\Property(property="nom", type="string", example="John"),
+ *              @OA\Property(property="email", type="string", example="john@example.com"),
+ *              @OA\Property(property="telephone", type="string", example="77234123"),
  *          )
  *      ),
  *     
