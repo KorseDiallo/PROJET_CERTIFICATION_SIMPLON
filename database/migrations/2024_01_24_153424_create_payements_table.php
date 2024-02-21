@@ -18,9 +18,11 @@ return new class extends Migration
             $table->id();
             $table->string('token')->nullable();
             $table->integer('amount');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            // $table->foreignId('collecte_de_fond_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->nullable();
             $table->foreignIdFor(collecteDeFond::class)->constrained()->onDelete('cascade');
+            $table->string('nom')->nullable();
+            $table->string('email')->nullable();
+            $table->string('telephone')->nullable();
             $table->timestamps();
             $table->softDeletes();
     
