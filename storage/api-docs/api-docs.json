@@ -595,6 +595,78 @@
                                     },
                                     "collecte_id": {
                                         "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succès de l'initialisation du paiement ou redirection vers la page de succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string"
+                                        },
+                                        "redirect_url": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur lors de l'initialisation du paiement",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/faireUnDonAnonyme": {
+            "post": {
+                "tags": [
+                    "Faire Un Don Par Un Donateur Anonyme "
+                ],
+                "summary": "Initie un paiement et gère le succès du paiement",
+                "description": "Initie un paiement avec PayTech et gère le succès du paiement",
+                "operationId": "faireUnDonAnonyme",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "price": {
+                                        "type": "integer"
+                                    },
+                                    "collecte_id": {
+                                        "type": "integer"
                                     },
                                     "nom": {
                                         "type": "string",
@@ -652,12 +724,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
+                }
             }
         },
         "/api/register": {

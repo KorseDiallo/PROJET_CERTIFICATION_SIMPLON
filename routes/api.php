@@ -82,3 +82,15 @@ Route::middleware(['auth:api','fondation'])->group(function(){
 
  Route::post('/login', [UsersController::class,'login']);
 
+
+
+ //donateur anonyme
+
+ Route::post('/faireUnDonAnonyme', [PayementController::class, 'initiatePaymentAnonyme']);
+ //debut route de l'api paytech
+ Route::get('payments', [PayementController::class, 'index'])->name('payment.index');
+ Route::post('/checkout', [PayementController::class, 'payment'])->name('payment.submit');
+ Route::get('ipn', [PayementController::class, 'ipn'])->name('paytech-ipn');
+ Route::get('payment-cancel', [PayementController::class, 'cancel'])->name('paytech.cancel');
+ //fin route de l'api paytech
+
