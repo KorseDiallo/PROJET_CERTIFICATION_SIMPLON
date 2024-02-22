@@ -201,6 +201,11 @@ public function login(loginUsersRequest $request){
                 "status" => false,
                 "message" => "Désoler mais votre Demande à été Refusée.Merci de rentrer en contact avec L'Admin",
             ]);
+        }else if($verifUser->is_deleted=true){
+            return response()->json([
+                "status" => false,
+                "message" => "Désoler mais votre compte n'est plus actif.Merci de rentrer en contact avec L'Admin",
+            ]);
         }
     }
 
@@ -209,6 +214,11 @@ public function login(loginUsersRequest $request){
             return response()->json([
                 "status" => false,
                 "message" => "Désoler mais votre compte a été bloquer.Merci de rentrer en contact avec L'Admin",
+            ]);
+        }else if($verifUser->is_deleted=true){
+            return response()->json([
+                "status" => false,
+                "message" => "Désoler mais votre compte n'est plus actif.Merci de rentrer en contact avec L'Admin",
             ]);
         }
     }  
