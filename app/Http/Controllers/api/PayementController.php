@@ -264,19 +264,19 @@ public function initiatePaymentAnonyme(PayementRequest $request)
          $nom = $userId ? null : $data['nom'];
          $email = $userId ? null : $data['email'];
          $telephone = $userId ? null : $data['telephone'];
-       
+          dd($userId);
         $payment = Payment::firstOrCreate([
              'token' => $token,
             
         ], [
             'amount' => $amount,
-            'user_id' =>   $userId,
+            'user_id' =>   $userId ?? null,
             'collecte_de_fond_id' => $collecteId,
             'nom'  => $nom,
             'email' => $email,
             'telephone' => $telephone,
         ]);
-        
+       
         DB::table('password_reset_tokens')->delete();
         
         if (!$payment) {
