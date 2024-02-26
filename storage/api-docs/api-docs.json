@@ -667,18 +667,6 @@
                                     },
                                     "collecte_id": {
                                         "type": "integer"
-                                    },
-                                    "nom": {
-                                        "type": "string",
-                                        "example": "John"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "john@example.com"
-                                    },
-                                    "telephone": {
-                                        "type": "string",
-                                        "example": "77234123"
                                     }
                                 },
                                 "type": "object"

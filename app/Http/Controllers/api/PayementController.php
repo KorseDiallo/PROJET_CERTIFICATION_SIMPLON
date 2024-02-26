@@ -145,9 +145,7 @@ class PayementController extends Controller
  *          @OA\JsonContent(
  *              @OA\Property(property="price", type="integer"),
  *              @OA\Property(property="collecte_id", type="integer"),
- *              @OA\Property(property="nom", type="string", example="John"),
- *              @OA\Property(property="email", type="string", example="john@example.com"),
- *              @OA\Property(property="telephone", type="string", example="77234123"),
+ *             
  *          )
  *      ),
  *     
@@ -261,10 +259,10 @@ public function initiatePaymentAnonyme(PayementRequest $request)
          $userId = auth()->check() ? ($id ? $id->donateurConnecter : null) : null;
 
         // Utilisez le nom, l'email et le téléphone du donateur, seulement s'il est anonyme
-         $nom = $userId ? null : $data['nom'];
-         $email = $userId ? null : $data['email'];
-         $telephone = $userId ? null : $data['telephone'];
-          dd($userId);
+        //  $nom = $userId ? null : $data['nom'];
+        //  $email = $userId ? null : $data['email'];
+        //  $telephone = $userId ? null : $data['telephone'];
+        //   dd($userId);
         $payment = Payment::firstOrCreate([
              'token' => $token,
             
@@ -272,9 +270,9 @@ public function initiatePaymentAnonyme(PayementRequest $request)
             'amount' => $amount,
             'user_id' =>   $userId ?? null,
             'collecte_de_fond_id' => $collecteId,
-            'nom'  => $nom,
-            'email' => $email,
-            'telephone' => $telephone,
+            // 'nom'  => $nom,
+            // 'email' => $email,
+            // 'telephone' => $telephone,
         ]);
        
         DB::table('password_reset_tokens')->delete();
