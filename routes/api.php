@@ -29,6 +29,7 @@ Route::middleware(['auth:api','admin'])->group(function(){
     Route::post('/bloquer/{user}',[UsersController::class,"bloquer"]);
     Route::post('/debloquer/{user}',[UsersController::class,"debloquer"]);
     Route::delete('/supprimer/{user}',[UsersController::class,"destroy"]);
+    Route::put('/reactiverCompte/{user}',[UsersController::class,"reactiverCompte"]);
     Route::get('/listeDonateur',[UsersController::class,"listeDonateur"]);
     Route::get('/listeFondation',[UsersController::class,"listeFondation"]);
     Route::get('/voirHistoriqueDon',[UsersController::class,"VoirhistoriqueDesDonsPourUnDonateur"]);
@@ -46,7 +47,7 @@ Route::middleware(['auth:api','donateur'])->group(function(){
     Route::get('payment-cancel', [PayementController::class, 'cancel'])->name('paytech.cancel');
     //fin route de l'api paytech
     Route::get('/listeCollecte',[collecteDeFondController::class,"listeCollecte"]);
-    Route::put('/supprimerCompte',[UsersController::class,"supprimerCompte"]);
+    Route::put('/supprimerCompteDonateur',[UsersController::class,"supprimerCompteDonateur"]);
     Route::post('/modifierProfil',[collecteDeFondController::class,"modifierProfil"]);
     Route::get('/historiqueDons',[collecteDeFondController::class,"historiqueDesDonsPourUnDonateur"]);
     Route::get('/historiqueDon/{donId}',[collecteDeFondController::class,"historiqueDonPourUnDonateur"]);
@@ -70,7 +71,7 @@ Route::middleware(['auth:api','fondation'])->group(function(){
     Route::put('/decloturerUneCollecte/{collecteDeFond}',[collecteDeFondController::class,"decloturerUneCollecte"]);
     Route::get('/listeCollecteEnCours',[collecteDeFondController::class,"listeCollecteEnCours"]);
     Route::get('/listeCollecteCloturer',[collecteDeFondController::class,"listeCollecteCloturer"]);
-    Route::put('/supprimerCompte',[UsersController::class,"supprimerCompte"]);
+    Route::put('/supprimerCompteFondation',[UsersController::class,"supprimerCompteFondation"]);
     Route::get('/listeDonateurADesDons',[collecteDeFondController::class,"listeDonateurADesDons"]);
     Route::get('/listeDonateurAUnDon/{collecteId}',[collecteDeFondController::class,"listeDonateurAUnDon"]);
     Route::get('/listeAbonner',[abonnementController::class,"listeAbonnerAUneFondation"]);

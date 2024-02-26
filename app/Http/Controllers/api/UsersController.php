@@ -201,7 +201,8 @@ public function login(loginUsersRequest $request){
                 "status" => false,
                 "message" => "Désoler mais votre Demande à été Refusée.Merci de rentrer en contact avec L'Admin",
             ]);
-        }else if($verifUser->is_deleted=true){
+        }
+        else if($verifUser->is_deleted==true){
             return response()->json([
                 "status" => false,
                 "message" => "Désoler mais votre compte n'est plus actif.Merci de rentrer en contact avec L'Admin",
@@ -215,7 +216,7 @@ public function login(loginUsersRequest $request){
                 "status" => false,
                 "message" => "Désoler mais votre compte a été bloquer.Merci de rentrer en contact avec L'Admin",
             ]);
-        }else if($verifUser->is_deleted=true){
+        }else if($verifUser->is_deleted==true){
             return response()->json([
                 "status" => false,
                 "message" => "Désoler mais votre compte n'est plus actif.Merci de rentrer en contact avec L'Admin",
@@ -694,10 +695,10 @@ public function dashboardAdmin(){
 
 
     /**
- * @OA\Delete(
- *     path="/api/supprimerCompte",
+ * @OA\put(
+ *     path="/api/supprimerCompteDonateur",
  *     summary="Supprimer le compte de l'utilisateur connecté",
- *     tags={"Suppression d'un compte par un donateur ou une fondation"},
+ *     tags={"Donateur:Suppression d'un compte  "},
  *     security={
  *         {"bearerAuth": {}}
  *     },
@@ -724,7 +725,59 @@ public function dashboardAdmin(){
  * @return \Illuminate\Http\JsonResponse
  */
 
-    public function supprimerCompte(){
+    public function supprimerCompteDonateur(){
+       
+        $userressource=User::where('id',Auth::user()->id)->first();
+
+        $userressource->is_deleted=true;
+
+         if($userressource->update()){
+            return response()->json([
+                "status" => true,
+                "message" => "Votre Compte a été supprimé avec succès"
+                
+            ]);   
+         }else{
+            return response()->json([
+                "status" => false,
+                "message" => "Vous n'etes pas proritaire du compte"
+                
+            ]);   
+         }
+    }
+
+
+     /**
+ * @OA\put(
+ *     path="/api/supprimerCompteFondation",
+ *     summary="Supprimer le compte de l'utilisateur connecté",
+ *     tags={"Fondation:Suppression d'un compte  "},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Response(
+ *         response=200,
+ *         description="Le compte a été supprimé avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Votre Compte a été supprimé avec succès")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Vous n'êtes pas autorisé à supprimer ce compte",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Vous n'êtes pas autorisé à supprimer ce compte")
+ *         )
+ *     )
+ * )
+ *
+ * Supprimer le compte de l'utilisateur connecté.
+ *
+ * @return \Illuminate\Http\JsonResponse
+ */
+    public function supprimerCompteDonateurFondation(){
        
         $userressource=User::where('id',Auth::user()->id)->first();
 
@@ -820,6 +873,71 @@ public function dashboardAdmin(){
             ]); 
         }
     }
+    
+    /**
+ * @OA\Put(
+ *      path="/api/reactiverCompte/{user}",
+ *      operationId="reactiverCompte",
+ *      tags={"Administrateur: Reactiver Un Compte Supprimer Par Une Fondation Ou Par Un Donateur"},
+ *      summary="Réactiver un compte utilisateur",
+ *      description="Réactive un compte utilisateur en mettant à jour le champ 'is_deleted' à false.",
+ *      security={{ "bearerAuth":{} }},
+ *      @OA\Parameter(
+ *          name="user",
+ *          in="path",
+ *          description="ID de l'utilisateur",
+ *          required=true,
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Compte réactivé avec succès",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status", type="boolean", example=true),
+ *              @OA\Property(property="message", type="string", example="Votre Compte a été Réactivé avec succès")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Utilisateur non trouvé",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="status", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Utilisateur non trouvé")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Non autorisé, veuillez vous connecter avec un jeton valide",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="error", type="string", example="Unauthenticated")
+ *          )
+ *      )
+ * )
+ *
+ * @param \App\Models\User $user
+ * @return \Illuminate\Http\JsonResponse
+ */
+
+
+    public function reactiverCompte(User $user){
+       
+
+        $user->is_deleted=false;
+
+         if($user->update()){
+            return response()->json([
+                "status" => true,
+                "message" => " Compte Réactivé avec succès"
+                
+            ]);   
+         } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Échec de la réactivation du compte"
+            ], 500);
+        }
+    }
+
 
 
     /**

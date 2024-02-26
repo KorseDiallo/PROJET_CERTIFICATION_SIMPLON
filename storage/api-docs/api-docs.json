@@ -1369,13 +1369,69 @@
                 ]
             }
         },
-        "/api/supprimerCompte": {
-            "delete": {
+        "/api/supprimerCompteDonateur": {
+            "put": {
                 "tags": [
-                    "Suppression d'un compte par un donateur ou une fondation"
+                    "Donateur:Suppression d'un compte  "
                 ],
                 "summary": "Supprimer le compte de l'utilisateur connecté",
-                "operationId": "4cd8a075b4db9cc29d8b8316c0f27fed",
+                "operationId": "2ddbeffe4707cdd6bdd0143eef0087ab",
+                "responses": {
+                    "200": {
+                        "description": "Le compte a été supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Votre Compte a été supprimé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Vous n'êtes pas autorisé à supprimer ce compte",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Vous n'êtes pas autorisé à supprimer ce compte"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/supprimerCompteFondation": {
+            "put": {
+                "tags": [
+                    "Fondation:Suppression d'un compte  "
+                ],
+                "summary": "Supprimer le compte de l'utilisateur connecté",
+                "operationId": "87d5fed8278cb9d862187c30afc9405f",
                 "responses": {
                     "200": {
                         "description": "Le compte a été supprimé avec succès",
@@ -1477,6 +1533,90 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Utilisateur non trouvé"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reactiverCompte/{user}": {
+            "put": {
+                "tags": [
+                    "Administrateur: Reactiver Un Compte Supprimer Par Une Fondation Ou Par Un Donateur"
+                ],
+                "summary": "Réactiver un compte utilisateur",
+                "description": "Réactive un compte utilisateur en mettant à jour le champ 'is_deleted' à false.",
+                "operationId": "reactiverCompte",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Compte réactivé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Votre Compte a été Réactivé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Utilisateur non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Utilisateur non trouvé"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé, veuillez vous connecter avec un jeton valide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
                                         }
                                     },
                                     "type": "object"
