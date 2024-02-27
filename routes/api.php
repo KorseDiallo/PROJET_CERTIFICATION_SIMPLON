@@ -30,6 +30,7 @@ Route::middleware(['auth:api','admin'])->group(function(){
     Route::post('/debloquer/{user}',[UsersController::class,"debloquer"]);
     Route::delete('/supprimer/{user}',[UsersController::class,"destroy"]);
     Route::put('/reactiverCompte/{user}',[UsersController::class,"reactiverCompte"]);
+    Route::get('/listeCompteAReactiver',[UsersController::class,"listeCompteAReactiver"]);
     Route::get('/listeDonateur',[UsersController::class,"listeDonateur"]);
     Route::get('/listeFondation',[UsersController::class,"listeFondation"]);
     Route::get('/voirHistoriqueDon',[UsersController::class,"VoirhistoriqueDesDonsPourUnDonateur"]);

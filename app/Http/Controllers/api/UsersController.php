@@ -938,6 +938,60 @@ public function dashboardAdmin(){
         }
     }
 
+    /**
+ * @OA\Get(
+ *     path="/api/listeCompteAReactiver",
+ *     summary="Liste des comptes à réactiver",
+ *     tags={"Administrateur:Listes des comptes à réactiver"},
+ *     security={{"bearerAuth": {}}},
+ *     @OA\Response(
+ *         response="200",
+ *         description="Liste des comptes à réactiver récupérée avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Liste de toutes les comptes supprimés"),
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object")),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response="404",
+ *         description="Aucun compte supprimé trouvé",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Vous n'avez aucune compte supprimé pour le moment"),
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object")) 
+ *         ),
+ *     ),
+ * )
+ */
+
+    public function listeCompteAReactiver(){
+        $listeCompte= User::where('is_deleted',true)->get();
+
+        // Filtrer les attributs non vides avant de les renvoyer
+        $listeCompteReactiver = $listeCompte->map(function ($user) {
+          return collect($user->toArray())->filter(function ($value) {
+              return !is_null($value) && $value !== '';
+          })->all();
+      });
+
+      if($listeCompteReactiver->isNotEmpty()){
+          return response()->json([
+              "status" => true,
+              "message" => "Liste de toutes les comptes Supprimé",
+              "data" => $listeCompteReactiver
+              
+          ]); 
+      }else{
+          return response()->json([
+              "status" => false,
+              "message" => "Vous avez aucune compte suprimé pour le moment",
+              "data" => []
+              
+          ]); 
+      }
+    }
+
 
 
     /**

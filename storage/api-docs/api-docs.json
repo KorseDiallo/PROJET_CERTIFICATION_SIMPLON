@@ -1632,6 +1632,74 @@
                 ]
             }
         },
+        "/api/listeCompteAReactiver": {
+            "get": {
+                "tags": [
+                    "Administrateur:Listes des comptes à réactiver"
+                ],
+                "summary": "Liste des comptes à réactiver",
+                "operationId": "e2ca801790b0f876041f7b06668b7bac",
+                "responses": {
+                    "200": {
+                        "description": "Liste des comptes à réactiver récupérée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Liste de toutes les comptes supprimés"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aucun compte supprimé trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Vous n'avez aucune compte supprimé pour le moment"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/voirHistoriqueDon": {
             "get": {
                 "tags": [
