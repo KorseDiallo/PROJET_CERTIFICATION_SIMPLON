@@ -1652,7 +1652,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Liste de toutes les comptes supprimés"
+                                            "example": "Liste de tous les comptes supprimés"
                                         },
                                         "data": {
                                             "type": "array",
@@ -1678,7 +1678,75 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Vous n'avez aucune compte supprimé pour le moment"
+                                            "example": "Vous n'avez aucun compte supprimé pour le moment"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/listeCompteBloquer": {
+            "get": {
+                "tags": [
+                    "Administrateur:Listes des comptes à débloquer"
+                ],
+                "summary": "Liste des comptes à débloquer",
+                "operationId": "5e50bff0ebbc6b4fc5a5395fdbef951f",
+                "responses": {
+                    "200": {
+                        "description": "Liste des comptes à débloquer récupérée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Liste de tous les comptes bloqué"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aucun compte supprimé trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Vous n'avez aucun compte bloqué pour le moment"
                                         },
                                         "data": {
                                             "type": "array",

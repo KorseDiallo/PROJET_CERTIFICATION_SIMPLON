@@ -949,7 +949,7 @@ public function dashboardAdmin(){
  *         description="Liste des comptes à réactiver récupérée avec succès",
  *         @OA\JsonContent(
  *             @OA\Property(property="status", type="boolean", example=true),
- *             @OA\Property(property="message", type="string", example="Liste de toutes les comptes supprimés"),
+ *             @OA\Property(property="message", type="string", example="Liste de tous les comptes supprimés"),
  *             @OA\Property(property="data", type="array", @OA\Items(type="object")),
  *         ),
  *     ),
@@ -958,7 +958,7 @@ public function dashboardAdmin(){
  *         description="Aucun compte supprimé trouvé",
  *         @OA\JsonContent(
  *             @OA\Property(property="status", type="boolean", example=false),
- *             @OA\Property(property="message", type="string", example="Vous n'avez aucune compte supprimé pour le moment"),
+ *             @OA\Property(property="message", type="string", example="Vous n'avez aucun compte supprimé pour le moment"),
  *             @OA\Property(property="data", type="array", @OA\Items(type="object")) 
  *         ),
  *     ),
@@ -978,14 +978,68 @@ public function dashboardAdmin(){
       if($listeCompteReactiver->isNotEmpty()){
           return response()->json([
               "status" => true,
-              "message" => "Liste de toutes les comptes Supprimé",
+              "message" => "Liste de tous les comptes Supprimé",
               "data" => $listeCompteReactiver
               
           ]); 
       }else{
           return response()->json([
               "status" => false,
-              "message" => "Vous avez aucune compte suprimé pour le moment",
+              "message" => "Vous avez aucun compte suprimé pour le moment",
+              "data" => []
+              
+          ]); 
+      }
+    }
+
+    /**
+ * @OA\Get(
+ *     path="/api/listeCompteBloquer",
+ *     summary="Liste des comptes à débloquer",
+ *     tags={"Administrateur:Listes des comptes à débloquer"},
+ *     security={{"bearerAuth": {}}},
+ *     @OA\Response(
+ *         response="200",
+ *         description="Liste des comptes à débloquer récupérée avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Liste de tous les comptes bloqué"),
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object")),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response="404",
+ *         description="Aucun compte supprimé trouvé",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Vous n'avez aucun compte bloqué pour le moment"),
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object")) 
+ *         ),
+ *     ),
+ * )
+ */
+
+    public function listeCompteBloquer(){
+        $listeBloquer= User::where('bloque',true)->get();
+
+        // Filtrer les attributs non vides avant de les renvoyer
+        $listeCompteBloquer = $listeBloquer->map(function ($user) {
+          return collect($user->toArray())->filter(function ($value) {
+              return !is_null($value) && $value !== '';
+          })->all();
+      });
+
+      if($listeCompteBloquer->isNotEmpty()){
+          return response()->json([
+              "status" => true,
+              "message" => "Liste de tous les comptes bloqués",
+              "data" => $listeCompteBloquer
+              
+          ]); 
+      }else{
+          return response()->json([
+              "status" => false,
+              "message" => "Vous avez aucun compte bloqué pour le moment",
               "data" => []
               
           ]); 
